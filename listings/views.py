@@ -30,7 +30,7 @@ class UserListingListView(ListingListView):
     serializer_class = ListingSerializer
 
     def get_queryset(self):
-        queryset = Listing.objects.get(user=self.request.user)
+        return Listing.objects.filter(owner=self.request.user)
 
 
 
