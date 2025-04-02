@@ -7,7 +7,7 @@ class User(AbstractUser):
 
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['email', 'password']
+    REQUIRED_FIELDS = []
 
 
 # Create your models here.

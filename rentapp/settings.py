@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+
+from django.conf.global_settings import STATICFILES_DIRS
 from environ import Env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -132,11 +134,16 @@ USE_I18N = True
 
 USE_TZ = True
 
+STATIC_URL = '/static/'
+
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
