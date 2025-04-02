@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from users.forms import UserRegisterForm
 from users.models import User
 
 from django.contrib.auth.forms import AuthenticationForm
@@ -43,18 +44,21 @@ def home(request):
     return render(request, "users/home.html")
 
 
-class RegisterView(APIView):
-    serializer_class = RegisterSerializer
-    permission_classes = (AllowAny,)
-    def post(self, request):
+class RegisterView(View):
+    def get(self, request):
+        form = UserRegisterForm()
+        return render(request, "users/register.html", {"form": form})
 
-        serializer = RegisterSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            response = Response(serializer.data, status=status.HTTP_201_CREATED)
-            set_jwt_token(user, response)
+    def post(self, request):
+        form = UserRegisterForm(data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            response = redirect("/api/listings")
+            set_jwt_token(user, response=response)
             return response
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return render(request, "users/register.html", {"form": form})
 
 
 

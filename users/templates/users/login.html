@@ -1,23 +1,40 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login</title>
-
-    <!-- Подключаем внешний CSS файл -->
-    <link rel="stylesheet" href="{% static 'users/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'users/css/styles_login.css' %}">
 </head>
 <body>
-    <div class="container">
-        <h1>Login</h1>
-        <form method="post">
+    <div class="login-container">
+        <h2>Login</h2>
+        <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Login</button>
+
+            {% if form.errors %}
+                <div class="error-message">
+                    <p>❌ Error! Check the entered data or change password!</p>
+                </div>
+            {% endif %}
+
+            <div class="input-group">
+                <label for="id_username">Email</label>
+                {{ form.username }}
+            </div>
+
+            <div class="input-group">
+                <label for="id_password">Password</label>
+                {{ form.password }}
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
         </form>
+
+        <p class="register-link">
+            No account? <a href="{% url 'register' %}">Register</a>
+        </p>
     </div>
 </body>
 </html>
