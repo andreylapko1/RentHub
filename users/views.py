@@ -34,10 +34,10 @@ class Login(APIView):
 
 class Logout(APIView):
     def get(self, request):
-        response = Response(status=status.HTTP_204_NO_CONTENT)
+        response = redirect("/login")
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
-        return redirect("/login")
+        return response
 
 def home(request):
     return render(request, "users/home.html")
