@@ -16,6 +16,7 @@ class Listing(models.Model):
     rooms = models.IntegerField()
     type = models.CharField(max_length=100, choices=TYPE_CHOICES)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
+    owner_email = models.CharField(max_length=255, blank=True)
     review = models.ForeignKey('bookings.Review', on_delete=models.CASCADE, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

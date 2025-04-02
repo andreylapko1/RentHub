@@ -21,7 +21,7 @@ from users.views import RegisterView, Login, home, Logout
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('listings.urls')),
+    path('api/listings/', include('listings.urls')),
     path('home/', home, name='home'),
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', Login.as_view(), name='login'),
