@@ -21,7 +21,7 @@ def set_jwt_token(user, response):
         httponly=True,
         secure=False,
         samesite='Lax',
-        max_age=refresh_token_live)
+        max_age=refresh_token_live),
 
     response.set_cookie(
         key='access_token',

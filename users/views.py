@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from users.forms import UserRegisterForm
 from users.models import User
@@ -18,6 +19,7 @@ from users.utils import set_jwt_token
 
 
 class Login(APIView):
+    permission_classes = (AllowAny,)
     def get(self, request):
         form = AuthenticationForm()
         return render(request, "users/login.html", {"form": form})
@@ -45,6 +47,7 @@ def home(request):
 
 
 class RegisterView(View):
+    permission_classes = (AllowAny,)
     def get(self, request):
         form = UserRegisterForm()
         return render(request, "users/register.html", {"form": form})
@@ -59,6 +62,8 @@ class RegisterView(View):
             return response
         else:
             return render(request, "users/register.html", {"form": form})
+
+
 
 
 

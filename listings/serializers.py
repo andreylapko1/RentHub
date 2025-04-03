@@ -12,6 +12,7 @@ class ListingSerializer(serializers.ModelSerializer):
 class ListingCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Listing
+        read_only_fields = ('owner',)
         fields = ('title', 'description','location' ,'price','rooms', 'type',)
 
     def create(self, validated_data):
@@ -19,6 +20,7 @@ class ListingCreateSerializer(serializers.ModelSerializer):
         user.is_owner = True
         user.save()
         validated_data['owner_email'] = user.email
+        validated_data['owner'] = user
         validated_data['is_active'] = True
         return super().create(validated_data)
 
@@ -26,3 +28,11 @@ class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+
+
+class ListingUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Listing
+        fields = '__all__'
+        read_only_fields = ('owner', 'review')
+
