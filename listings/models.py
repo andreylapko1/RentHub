@@ -17,7 +17,7 @@ class Listing(models.Model):
     type = models.CharField(max_length=100, choices=TYPE_CHOICES)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     owner_email = models.CharField(max_length=255, blank=True)
-    review = models.ForeignKey('bookings.Review', on_delete=models.CASCADE, null=True)
+    review = models.ForeignKey('Review', on_delete=models.CASCADE, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -25,5 +25,16 @@ class Listing(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Review(models.Model): # in listings
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    booking = models.ForeignKey("bookings.Booking", on_delete=models.CASCADE)
+    review = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.user.username} - {self.booking.title}'
 
 # Create your models here.
