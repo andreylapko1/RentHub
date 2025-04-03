@@ -1,5 +1,4 @@
 from django.db import models
-
 from rentapp import settings
 
 
@@ -19,7 +18,7 @@ class Booking(models.Model):
     def __str__(self):
         return f'{self.listing.title} - {self.renter}'
 
-class Review(models.Model):
+class Review(models.Model): # in listings
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     review = models.TextField()

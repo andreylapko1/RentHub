@@ -7,7 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from listings.models import Listing
-from listings.serializers import ListingSerializer, ListingCreateSerializer
+from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer
+from users.models import User
 
 
 class ListingListView(ListAPIView):
@@ -24,7 +25,7 @@ class ListingCreateView(ListCreateAPIView):
     serializer_class = ListingCreateSerializer
     queryset = Listing.objects.all()
 
-class UserListingListView(ListingListView):
+class UserListingListView(ListView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (JWTAuthentication,)
     serializer_class = ListingSerializer
@@ -33,8 +34,11 @@ class UserListingListView(ListingListView):
         return Listing.objects.filter(owner=self.request.user)
 
 
-
-
+class UserList(ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserListSerializer
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JWTAuthentication,)
 
 
 
