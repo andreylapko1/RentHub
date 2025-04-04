@@ -5,30 +5,18 @@ from django.views.generic import ListView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+
+from listings.filters import ListingKeywordFilter
 from listings.models import Listing
 from listings.permissions import IsOwner
 from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer, ListingUpdateSerializer
 from users.models import User
 
 
-class ListingKeywordFilter(django_filters.FilterSet):
-    price = django_filters.NumberFilter(field_name='price')
-    keyword = django_filters.CharFilter(field_name='title', method='filter_by_keywords')
-    location = django_filters.CharFilter(field_name='location', lookup_expr='icontains')
-    rooms = django_filters.NumberFilter(field_name='rooms')
-
-
-    class Meta:
-        model = Listing
-        fields = ['price', 'description', 'location', 'type', 'rooms', 'keyword']
-
-    def filter_by_keywords(self, queryset, name, value):
-        return Listing.objects.filter(
-            Q(description__icontains=value) | Q(title__icontains=value)
-        )
 
 
 class ListingListView(ListAPIView):

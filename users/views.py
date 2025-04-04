@@ -7,25 +7,24 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from users.forms import UserRegisterForm
+from users.forms import UserRegisterForm, LoginForm
 from users.models import User
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 
-from users.serializers import RegisterSerializer
 from users.utils import set_jwt_token
 
 
 class Login(APIView):
     permission_classes = (AllowAny,)
     def get(self, request):
-        form = AuthenticationForm()
+        form = LoginForm()
         return render(request, "users/login.html", {"form": form})
 
     def post(self, request):
-        form = AuthenticationForm(data=request.POST)
+        form = LoginForm(data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
