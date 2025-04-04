@@ -3,7 +3,7 @@ from django.db import models
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    is_owner = models.BooleanField(default=False) # landlord
+    is_landlord = models.BooleanField(default=False)
 
 
 

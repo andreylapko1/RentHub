@@ -1,28 +1,20 @@
-import django_filters
-from django.db.models import Q
-from django.shortcuts import render
-from django.views.generic import ListView
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import permissions, viewsets
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
 
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
+from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from listings.filters import ListingKeywordFilter
 from listings.models import Listing
 from listings.permissions import IsOwner
 from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer, ListingUpdateSerializer
+from rentapp.pagination import CustomPagination
 from users.models import User
-
 
 
 
 class ListingListView(ListAPIView):
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
-
+    pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     ordering_fields = ['price', 'created_at', 'updated_at']
     filterset_fields = ['price', 'description', 'location', 'type', 'rooms',]

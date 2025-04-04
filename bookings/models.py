@@ -8,8 +8,11 @@ class Booking(models.Model):
         ('confirmed', 'Confirmed'),
         ('canceled', 'Canceled'),
     )
+    title = models.CharField(max_length=100, null=True)
     listing = models.ForeignKey('listings.Listing', on_delete=models.CASCADE)
     renter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    landlord_email = models.CharField(max_length=254, null=True, blank=True)
+    is_confirmed = models.BooleanField(default=False)
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     status = models.CharField(choices=STATUS_CHOICES, max_length=10, default='pending')
@@ -17,6 +20,8 @@ class Booking(models.Model):
 
     def __str__(self):
         return f'{self.listing.title} - {self.renter}'
+
+
 
 
 

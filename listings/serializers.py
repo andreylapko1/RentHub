@@ -12,15 +12,15 @@ class ListingSerializer(serializers.ModelSerializer):
 class ListingCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Listing
-        read_only_fields = ('owner',)
+        read_only_fields = ('landlord',)
         fields = ('title', 'description','location' ,'price','rooms', 'type',)
 
     def create(self, validated_data):
         user = self.context['request'].user
         user.is_owner = True
         user.save()
-        validated_data['owner_email'] = user.email
-        validated_data['owner'] = user
+        validated_data['landlord_email'] = user.email
+        validated_data['landlord'] = user
         validated_data['is_active'] = True
         return super().create(validated_data)
 
