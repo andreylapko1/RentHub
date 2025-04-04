@@ -5,7 +5,7 @@ from django.views.generic import ListView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -24,7 +24,8 @@ class ListingListView(ListAPIView):
     serializer_class = ListingSerializer
 
 
-    filter_backends = (DjangoFilterBackend, )
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    ordering_fields = ['price', 'created_at', 'updated_at']
     filterset_fields = ['price', 'description', 'location', 'type', 'rooms',]
     filterset_class = ListingKeywordFilter
 
