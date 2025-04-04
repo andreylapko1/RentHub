@@ -31,4 +31,5 @@ def set_jwt_token(user, response):
         samesite='Lax',
         max_age=access_token_live
     )
+    response["Authorization"] = f"Bearer {access_token}"
     return response

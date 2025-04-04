@@ -1,5 +1,6 @@
+from django.utils import timezone
 from rest_framework import serializers
-
+from rest_framework.exceptions import ValidationError
 
 from bookings.models import Booking
 
@@ -23,6 +24,11 @@ class BookingCreateSerializer(serializers.ModelSerializer):
             'renter',
         ]
         read_only_fields = ['status', 'renter', 'is_confirmed']
+
+    def validate(self, data):
+        if data['start_date'] < timezone.now() or data['end_date'] < timezone.now():
+            raise ValidationError("The start and end date should be in the future.")
+        return data
 
     def create(self, validated_data):
         listing = validated_data.get('listing')

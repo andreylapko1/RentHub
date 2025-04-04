@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'rentapp.middleware.JWTAuthMiddleware',
+    'rentapp.middleware.AutoRefreshJWTMiddleware',
 ]
 
 ROOT_URLCONF = 'rentapp.urls'
@@ -157,10 +157,13 @@ STATIC_URL = '/static/'
 # ]
 
 SIMPLE_JWT = {
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'JWT_AUTH_COOKIE': 'access_token',
-    # 'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    # 'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),  # Время жизни access-токена
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # Время жизни refresh-токена
+    "ROTATE_REFRESH_TOKENS": True,  # Позволяет обновлять refresh-токены
+    "BLACKLIST_AFTER_ROTATION": True,  # Блокирует старые refresh-токены
+    "ALGORITHM": "HS256",  # Алгоритм шифрования
+    "SIGNING_KEY": SECRET_KEY,  # Подписываем токены SECRET_KEY Django
+    "AUTH_HEADER_TYPES": ("Bearer",),  # Формат заголовка Authorization
 }
 
 # Static files (CSS, JavaScript, Images)

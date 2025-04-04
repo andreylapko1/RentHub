@@ -44,7 +44,7 @@ class ListingCreateView(ListCreateAPIView):
 class UserListingListView(ListAPIView):
     serializer_class = ListingSerializer
     def get_queryset(self):
-        return Listing.objects.filter(owner=self.request.user)
+        return Listing.objects.filter(landlord=self.request.user)
 
 
 class UserList(ListAPIView):
