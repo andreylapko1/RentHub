@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import permissions, viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -23,7 +23,6 @@ class ListingListView(ListAPIView):
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
 
-
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     ordering_fields = ['price', 'created_at', 'updated_at']
     filterset_fields = ['price', 'description', 'location', 'type', 'rooms',]
@@ -35,9 +34,7 @@ class ListingListView(ListAPIView):
 
 
 
-
-
-class ListingRetrieveUpdateView(RetrieveUpdateAPIView):
+class ListingRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsOwner]
     serializer_class = ListingUpdateSerializer
     def get_queryset(self):
