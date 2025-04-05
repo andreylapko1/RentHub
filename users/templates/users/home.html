@@ -1,11 +1,52 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Loggin succesfully!</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentHub</title>
+    <link rel="stylesheet" href="{% static 'users/css/home.css' %}">
 </head>
 <body>
-    <p>Register succesfull!</p>
+    <div class="main-wrapper">
+        <header class="header">
+            <h1>RentHub API</h1>
+            <p>Explore the various API endpoints below</p>
+        </header>
+
+        <section class="links">
+            <div class="box_link">
+                <h3><a href="/api/listings">Listings</a></h3>
+                <p>View all available listings</p>
+            </div>
+            <div class="box_link">
+                <h3><a href="/api/listings/create">Create Listing</a></h3>
+                <p>Create a new listing</p>
+            </div>
+
+
+
+            <div class="box_link">
+                <h3><a href="/api/bookings">Bookings</a></h3>
+                <p>View your bookings</p>
+            </div>
+
+            <div class="box_link">
+                <h3><a href="/api/bookings/create">Create Booking</a></h3>
+                <p>Create a new booking</p>
+            </div><div class="box_link">
+                <h3><a href="/api/bookings/applications">User Applications</a></h3>
+                <p>View user applications</p>
+            </div>
+            <div class="box_link">
+                <h3><a href="/logout">Logout</a></h3>
+                <p>Logout</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2025 RentHub | All rights reserved</p>
+        </footer>
+    </div>
 </body>
 </html>

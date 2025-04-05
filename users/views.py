@@ -28,7 +28,7 @@ class Login(APIView):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            response = redirect("/api/listings")
+            response = redirect("/home")
             set_jwt_token(user, response=response)
             return response
         else:
@@ -56,11 +56,13 @@ class RegisterView(View):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            response = redirect("/api/listings")
+            response = redirect("/home")
             set_jwt_token(user, response=response)
             return response
         else:
             return render(request, "users/register.html", {"form": form})
+
+
 
 
 
