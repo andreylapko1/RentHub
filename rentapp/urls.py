@@ -16,11 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from users.views import RegisterView, Login, home, Logout
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/login/', permanent=False)),
     path('admin/', admin.site.urls),
     path('api/listings/', include('listings.urls')),
     path('api/bookings/', include('bookings.urls')),

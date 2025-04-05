@@ -1,6 +1,7 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f9;
+    background-color: #f4f4f7;
+    /*background-image: url('https://images.pexels.com/photos/1509534/pexels-photo-1509534.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');*/
     display: flex;
     justify-content: center;
     align-items: center;

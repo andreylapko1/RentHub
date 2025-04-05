@@ -7,6 +7,7 @@ class Booking(models.Model):
         ('pending', 'Pending'),
         ('confirmed', 'Confirmed'),
         ('canceled', 'Canceled'),
+        ('completed', 'Completed'),
     )
     title = models.CharField(max_length=100, null=True)
     listing = models.ForeignKey('listings.Listing', on_delete=models.CASCADE)
@@ -20,6 +21,8 @@ class Booking(models.Model):
 
     def __str__(self):
         return f'{self.listing.title} - {self.renter}'
+
+
 
 
 

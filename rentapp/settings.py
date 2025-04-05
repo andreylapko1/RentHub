@@ -116,7 +116,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend', ),
+    'DEFAULT_PAGINATION_CLASS': 'rentapp.pagination.CustomPagination',
+    # 'DEFAULT_FILTER_BACKENDS': 'django_filters.rest_framework.DjangoFilterBackend',
 }
 
 # Password validation
@@ -152,23 +153,24 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
-# STATICFILES_DIRS = [
-#     BASE_DIR / 'static',
-# ]
+
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),  # Время жизни access-токена
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # Время жизни refresh-токена
-    "ROTATE_REFRESH_TOKENS": True,  # Позволяет обновлять refresh-токены
-    "BLACKLIST_AFTER_ROTATION": True,  # Блокирует старые refresh-токены
-    "ALGORITHM": "HS256",  # Алгоритм шифрования
-    "SIGNING_KEY": SECRET_KEY,  # Подписываем токены SECRET_KEY Django
-    "AUTH_HEADER_TYPES": ("Bearer",),  # Формат заголовка Authorization
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static',
+# ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

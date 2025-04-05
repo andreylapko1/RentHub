@@ -2,11 +2,11 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
-from listings.filters import ListingKeywordFilter
+from listings.filters import ListingKeywordFilter, ListingOrderingFilter
 from listings.models import Listing
-from listings.permissions import IsOwner
 from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer, ListingUpdateSerializer
 from rentapp.pagination import CustomPagination
+from rentapp.permissions import IsLandlord
 from users.models import User
 
 
@@ -15,7 +15,7 @@ class ListingListView(ListAPIView):
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
     pagination_class = CustomPagination
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_backends = [DjangoFilterBackend, OrderingFilter, ]
     ordering_fields = ['price', 'created_at', 'updated_at']
     filterset_fields = ['price', 'description', 'location', 'type', 'rooms',]
     filterset_class = ListingKeywordFilter
@@ -27,7 +27,7 @@ class ListingListView(ListAPIView):
 
 
 class ListingRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsOwner]
+    permission_classes = [IsLandlord]
     serializer_class = ListingUpdateSerializer
     def get_queryset(self):
         pk = self.kwargs.get('pk')
@@ -43,6 +43,9 @@ class ListingCreateView(ListCreateAPIView):
 
 class UserListingListView(ListAPIView):
     serializer_class = ListingSerializer
+    filter_backends = [DjangoFilterBackend, ]
+    filterset_class = ListingOrderingFilter
+
     def get_queryset(self):
         return Listing.objects.filter(landlord=self.request.user)
 
