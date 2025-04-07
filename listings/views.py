@@ -72,7 +72,8 @@ class ListingViewsList(ListAPIView):
     serializer_class = ListingViewsListSerializer
 
     def get_queryset(self):
-        return Review.objects.filter(booking__listing=self.kwargs['pk'])
+        listing_id = self.request.GET.get('listing_id')
+        return Review.objects.filter(booking__listing=listing_id)
 
 class ReviewCreateView(CreateAPIView):
     queryset = Review.objects.all()
