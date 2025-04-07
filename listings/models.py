@@ -39,7 +39,6 @@ class Review(models.Model):
     ]
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     booking = models.ForeignKey("bookings.Booking", on_delete=models.CASCADE)
-    listing = models.ForeignKey("Listing", on_delete=models.CASCADE, related_name='reviews', null=True)
     rate = models.PositiveSmallIntegerField(default=0, choices=RATE_CHOICES)
     review = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -3,7 +3,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
-from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
 from rest_framework.response import Response
 
 from listings.filters import ListingKeywordFilter, ListingOrderingFilter
@@ -45,7 +45,8 @@ class ListingRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
 
 
 
-class ListingCreateView(ListCreateAPIView):
+class ListingCreateView(CreateAPIView):
+    filter_backends = [ ]
     serializer_class = ListingCreateSerializer
     queryset = Listing.objects.all()
 
@@ -70,7 +71,10 @@ class ListingViewsList(ListAPIView):
     queryset = Review.objects.all()
     serializer_class = ListingViewsListSerializer
 
-class ReviewCreateView(ListCreateAPIView):
+    def get_queryset(self):
+        return Review.objects.filter(booking__listing=self.kwargs['pk'])
+
+class ReviewCreateView(CreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewCreateSerializer
     filter_backends = []

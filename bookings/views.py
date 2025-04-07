@@ -16,8 +16,9 @@ from rentapp.permissions import IsLandlord, IsLandlordEmail, IsLandlordOrForbidd
 
 
 class BookingsListView(ListAPIView):
-    filter_backends = [DjangoFilterBackend, ]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ['start_date', 'end_date', 'status', 'landlord_email',]
+    ordering_fields = ['created_at', 'updated_at',]
     filterset_class = BookingRangeDateFilter
     queryset = Booking.objects.all()
     serializer_class = BookingsListSerializer
@@ -83,6 +84,7 @@ class ConfirmCanceledBookingsView(RetrieveUpdateAPIView):
 
 class UserBookingsListView(ListAPIView):
     serializer_class = BookingToUserSerializer
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ['created_at', 'landlord_email', ]
     ordering_fields = ['created_at', 'title', 'is_confirmed']
     def get_queryset(self):
@@ -93,7 +95,7 @@ class UserBookingsListView(ListAPIView):
 class UserBookingHistoryView(ListAPIView):
     pagination_class = CustomPagination
     queryset = Booking.objects.all()
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
+    # filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_fields = ['created_at', 'landlord_email', ]
     serializer_class = BookingsListSerializer
 
