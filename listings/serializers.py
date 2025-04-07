@@ -61,8 +61,8 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         validated_data['user'] = user
         booking = validated_data['booking']
 
-        if Review.objects.filter():
-            pass
+        if Review.objects.filter(booking=booking, user=user).exists():
+            raise serializers.ValidationError('You have already reviewed this booking.')
 
         if booking.renter != user:
             raise serializers.ValidationError('You are not allowed to review bookings')
