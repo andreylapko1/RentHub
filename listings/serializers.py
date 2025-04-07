@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from listings.models import Listing
+from listings.models import Listing, Review
 from users.models import User
 
 
@@ -35,4 +35,30 @@ class ListingUpdateSerializer(serializers.ModelSerializer):
         model = Listing
         fields = '__all__'
         read_only_fields = ('owner', 'review')
+
+
+class ListingViewsListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ('rate', 'review', 'created_at', )
+
+class ReviewCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+        read_only_fields = ['user', ]
+
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['user'] = user
+        booking = validated_data['booking']
+        if booking.renter != user:
+            raise serializers.ValidationError('You are not allowed to review bookings')
+        if booking.status != 'completed':
+            raise serializers.ValidationError('This booking is not completed')
+        review = super().create(validated_data)
+        return review
+
+
 

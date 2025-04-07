@@ -1,17 +1,22 @@
-
+from django.contrib.auth import logout
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.response import Response
+
 from listings.filters import ListingKeywordFilter, ListingOrderingFilter
-from listings.models import Listing
-from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer, ListingUpdateSerializer
+from listings.models import Listing, Review
+from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer, \
+    ListingUpdateSerializer, ReviewCreateSerializer, ListingViewsListSerializer
 from rentapp.pagination import CustomPagination
 from rentapp.permissions import IsLandlord
 from users.models import User
 
 
 
-class ListingListView(ListAPIView):
+class ListingListView(viewsets.ModelViewSet):
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
     pagination_class = CustomPagination
@@ -22,6 +27,11 @@ class ListingListView(ListAPIView):
 
     def get_queryset(self):
         return Listing.objects.filter(is_active=True)
+
+    @action(detail=False, methods=['post'], url_path='/logout') # TODO make extra_action logout button
+    def logout_user(self, request):
+        logout(request)
+        return Response({"detail": "User logged out successfully."}, status=status.HTTP_200_OK)
 
 
 
@@ -55,7 +65,15 @@ class UserList(ListAPIView):
     serializer_class = UserListSerializer
 
 
+class ListingViewsList(ListAPIView):
+    filter_backends = []
+    queryset = Review.objects.all()
+    serializer_class = ListingViewsListSerializer
 
+class ReviewCreateView(ListCreateAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewCreateSerializer
+    filter_backends = []
 
 
 # Create your views here.

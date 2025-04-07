@@ -26,10 +26,10 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['status', 'renter', 'is_confirmed']
 
-    def validate(self, data):
-        if data['start_date'] < timezone.now() or data['end_date'] < timezone.now():
-            raise ValidationError("The start and end date should be in the future.")
-        return data
+    # def validate(self, data):
+    #     if data['start_date'] < timezone.now() or data['end_date'] < timezone.now():
+    #         raise ValidationError("The start and end date should be in the future.")
+    #     return data
 
     def create(self, validated_data):
         listing = validated_data.get('listing')

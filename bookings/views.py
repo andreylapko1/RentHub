@@ -16,7 +16,7 @@ from rentapp.permissions import IsLandlord, IsLandlordEmail, IsLandlordOrForbidd
 
 
 class BookingsListView(ListAPIView):
-    filter_backends = [DjangoFilterBackend, ] #TODO WORK
+    filter_backends = [DjangoFilterBackend, ]
     filterset_fields = ['start_date', 'end_date', 'status', 'landlord_email',]
     filterset_class = BookingRangeDateFilter
     queryset = Booking.objects.all()
@@ -24,7 +24,7 @@ class BookingsListView(ListAPIView):
 
 
 class UserCompletedBookingsListView(ListAPIView):
-    filter_backends = [DjangoFilterBackend, ]  # TODO WORK
+    filter_backends = [DjangoFilterBackend, ]
     filterset_fields = ['start_date', 'end_date', 'status', 'landlord_email', ]
     filterset_class = BookingRangeDateFilter
     queryset = Booking.objects.all()
@@ -61,9 +61,9 @@ class BookingsToUsersView(ListAPIView):
     queryset = Booking.objects.all()
     pagination_class = CustomPagination
     serializer_class = BookingToUserSerializer
-    filter_backends = (DjangoFilterBackend, )
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_fields = ['created_at', 'is_confirmed', ]
-    # ordering_fields = ['created_at', 'title', 'is_confirmed'] # TODO dont work ordering
+    ordering_fields = ['created_at', 'title', 'is_confirmed']
 
     def get_queryset(self):
         user = self.request.user
@@ -71,18 +71,20 @@ class BookingsToUsersView(ListAPIView):
 
 
 class ConfirmCanceledBookingsView(RetrieveUpdateAPIView):
+    filter_backends = [ ]
     permission_classes = [IsLandlordOrForbidden]
     queryset = Booking.objects.all()
+    ordering_fields = ['created_at', 'title', 'is_confirmed']
     serializer_class = ConfirmCanceledBookingsSerializer
 
 
 
 
 
-class UserBookingsListView(ListAPIView): #TODO DONT WORK WITHOUT filter_backends
+class UserBookingsListView(ListAPIView):
     serializer_class = BookingToUserSerializer
-    filter_backends = [DjangoFilterBackend, ]
     filterset_fields = ['created_at', 'landlord_email', ]
+    ordering_fields = ['created_at', 'title', 'is_confirmed']
     def get_queryset(self):
         return Booking.objects.filter(renter=self.request.user)
 

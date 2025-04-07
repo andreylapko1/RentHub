@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 
-def set_jwt_token(user, response):
+def set_jwt_token(user, response=None):
     if response is None:
         response = Response(status=status.HTTP_200_OK)
 
