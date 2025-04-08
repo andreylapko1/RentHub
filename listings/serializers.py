@@ -36,7 +36,7 @@ class ListingUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Listing
         fields = '__all__'
-        read_only_fields = ('owner', 'review')
+        read_only_fields = ('owner', 'review', 'rate', 'landlord')
 
 
 class ListingViewsListSerializer(serializers.ModelSerializer):

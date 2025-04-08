@@ -37,6 +37,7 @@ class ListingListView(viewsets.ModelViewSet):
 
 
 class ListingRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
+    filter_backends = []
     permission_classes = [IsLandlord]
     serializer_class = ListingUpdateSerializer
     def get_queryset(self):
