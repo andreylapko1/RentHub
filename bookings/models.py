@@ -10,8 +10,8 @@ class Booking(models.Model):
         ('completed', 'Completed'),
     )
     title = models.CharField(max_length=100, null=True)
-    listing = models.ForeignKey('listings.Listing', on_delete=models.CASCADE)
-    renter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    listing = models.ForeignKey('listings.Listing', on_delete=models.CASCADE, default=1)
+    renter = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     landlord_email = models.CharField(max_length=254, null=True, blank=True)
     is_confirmed = models.BooleanField(default=False)
     start_date = models.DateTimeField()

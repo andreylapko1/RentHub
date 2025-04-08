@@ -1,4 +1,5 @@
 import django_filters
+from cities_light.models import City
 from django.db.models import Q
 from listings.models import Listing
 
@@ -23,7 +24,11 @@ class ListingKeywordFilter(django_filters.FilterSet):
     min_price = django_filters.NumberFilter(label='Min price', method='filter_by_min_price')
     max_price = django_filters.NumberFilter(label='Max price', method='filter_by_max_price')
     keyword = django_filters.CharFilter(label='Keywords', method='filter_by_keywords')
-    location = django_filters.CharFilter(field_name='location', lookup_expr='icontains')
+    location = django_filters.ModelChoiceFilter(
+        queryset=City.objects.filter(country__name='Germany'),
+        label='Location',
+        empty_label='Select Location',
+    )
     rooms = django_filters.NumberFilter(field_name='rooms')
 
 

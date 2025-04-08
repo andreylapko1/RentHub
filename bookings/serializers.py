@@ -33,13 +33,15 @@ class BookingCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         listing = validated_data.get('listing')
-        validated_data['landlord_email'] = listing.landlord_email
+        landlord_email = listing.landlord_email
+        validated_data['landlord_email'] = landlord_email
         validated_data['renter'] = self.context['request'].user
         validated_data['title'] = listing.title
         return super().create(validated_data)
 
 
 class BookingToUserSerializer(serializers.ModelSerializer):
+    renter = serializers.CharField(source='renter.email', read_only=True)
     class Meta:
         model = Booking
         fields = '__all__'

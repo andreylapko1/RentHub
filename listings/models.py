@@ -1,3 +1,4 @@
+from cities_light.models import City
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -12,7 +13,7 @@ class Listing(models.Model):
 
     title = models.CharField(max_length=100)
     description = models.TextField(max_length=500)
-    location = models.CharField(max_length=100)
+    location = models.ForeignKey(City, on_delete=models.CASCADE, default=1)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     rooms = models.IntegerField()
     type = models.CharField(max_length=100, choices=TYPE_CHOICES)

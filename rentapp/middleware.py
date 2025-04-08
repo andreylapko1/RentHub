@@ -1,15 +1,24 @@
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
-
-from rentapp import settings
-
-import requests
-from django.utils.deprecation import MiddlewareMixin
-from django.conf import settings
-
-
 import requests
 import jwt
 from django.utils.deprecation import MiddlewareMixin
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+
+
+class RedirectUnauthenticatedMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if response.status_code == 401:
+            if request.user.is_authenticated:  # например, проверка на аутентификацию
+                return HttpResponseRedirect(reverse('login'))
+        return response
+
+
 
 
 class AutoRefreshJWTMiddleware(MiddlewareMixin):

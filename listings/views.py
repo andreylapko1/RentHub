@@ -1,9 +1,11 @@
 from django.contrib.auth import logout
+from django.shortcuts import redirect
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 
 from listings.filters import ListingKeywordFilter, ListingOrderingFilter
@@ -21,9 +23,14 @@ class ListingListView(viewsets.ModelViewSet):
     serializer_class = ListingSerializer
     pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend, OrderingFilter, ]
-    ordering_fields = ['price', 'created_at', 'updated_at']
+    ordering_fields = ['price', 'created_at', 'updated_at', 'rate']
     filterset_fields = ['price', 'description', 'location', 'type', 'rooms',]
     filterset_class = ListingKeywordFilter
+
+
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('/login')
 
     def get_queryset(self):
         return Listing.objects.filter(is_active=True)

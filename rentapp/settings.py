@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
     'rest_framework',
+    'cities_light',
     'django_filters',
     'bookings',
     'listings',
@@ -59,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'rentapp.middleware.AutoRefreshJWTMiddleware',
+    'rentapp.middleware.RedirectUnauthenticatedMiddleware',
 ]
 
 ROOT_URLCONF = 'rentapp.urls'
@@ -156,8 +158,8 @@ STATIC_URL = '/static/'
 
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    # "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20),
+    # "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "ALGORITHM": "HS256",
