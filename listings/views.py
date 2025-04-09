@@ -1,4 +1,5 @@
 from django.contrib.auth import logout
+from django.db import IntegrityError
 from django.db.models import F
 from django.shortcuts import redirect
 from django_filters.rest_framework import DjangoFilterBackend
@@ -11,7 +12,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 
 from listings.filters import ListingKeywordFilter, ListingOrderingFilter
-from listings.models import Listing, Review
+from listings.models import Listing, Review, ListingView
 from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer, \
     ListingUpdateSerializer, ReviewCreateSerializer, ListingViewsListSerializer, ListingDetailSerializer
 from rentapp.pagination import CustomPagination
@@ -52,7 +53,13 @@ class ListingRetrieveView(RetrieveAPIView):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        Listing.objects.filter(pk=instance.pk).update(views_count=F('views_count') + 1)
+        user = self.request.user
+        try:
+            ListingView.objects.create(user=user, listing=instance)
+            Listing.objects.filter(pk=instance.id).update(views_count=F('views_count') + 1)
+        except IntegrityError:
+            pass
+
         return super().retrieve(request, *args, **kwargs)
 
 class ListingRetrieveUpdateView(RetrieveUpdateDestroyAPIView):

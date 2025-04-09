@@ -48,4 +48,13 @@ class Review(models.Model):
     def __str__(self):
         return f'{self.user.username} - {self.booking.title}'
 
+
+class ListingView(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+    viewed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'listing')
+
 # Create your models here.
