@@ -1,17 +1,19 @@
 from django.contrib.auth import logout
+from django.db.models import F
 from django.shortcuts import redirect
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
-from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView
+from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView, \
+    RetrieveAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 
 from listings.filters import ListingKeywordFilter, ListingOrderingFilter
 from listings.models import Listing, Review
 from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer, \
-    ListingUpdateSerializer, ReviewCreateSerializer, ListingViewsListSerializer
+    ListingUpdateSerializer, ReviewCreateSerializer, ListingViewsListSerializer, ListingDetailSerializer
 from rentapp.pagination import CustomPagination
 from rentapp.permissions import IsLandlord
 from users.models import User
@@ -41,7 +43,17 @@ class ListingListView(viewsets.ModelViewSet):
         return Response({"detail": "User logged out successfully."}, status=status.HTTP_200_OK)
 
 
+class ListingRetrieveView(RetrieveAPIView):
+    serializer_class = ListingDetailSerializer
+    filter_backends = []
 
+    def get_queryset(self):
+        return Listing.objects.filter(pk=self.kwargs['pk'])
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        Listing.objects.filter(pk=instance.pk).update(views_count=F('views_count') + 1)
+        return super().retrieve(request, *args, **kwargs)
 
 class ListingRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
     filter_backends = []

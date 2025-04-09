@@ -10,7 +10,18 @@ class ListingSerializer(serializers.ModelSerializer):
     location = serializers.CharField(source='location.name', read_only=True)
     class Meta:
         model = Listing
+        # fields = '__all__'
+        exclude = ('views_count', 'is_active', 'updated_at', 'created_at', 'landlord',)
+
+
+class ListingDetailSerializer(serializers.ModelSerializer):
+    location = serializers.CharField(source='location.name', read_only=True)
+    class Meta:
+        model = Listing
         fields = '__all__'
+
+
+
 
 
 class ListingCreateSerializer(serializers.ModelSerializer):
@@ -37,6 +48,10 @@ class UserListSerializer(serializers.ModelSerializer):
 
 
 class ListingUpdateSerializer(serializers.ModelSerializer):
+    location = serializers.SlugRelatedField(
+        queryset=City.objects.filter(country=57),
+        slug_field='name_ascii'
+    )
     class Meta:
         model = Listing
         fields = '__all__'

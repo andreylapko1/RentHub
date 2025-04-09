@@ -37,6 +37,7 @@ class UserCompletedBookingsListView(ListAPIView):
 
 
 class BookingsDetailListView(RetrieveDestroyAPIView):
+    filter_backends = [ ]
     queryset = Booking.objects.all()
     serializer_class = BookingsListSerializer
 
@@ -95,8 +96,9 @@ class UserBookingsListView(ListAPIView):
 class UserBookingHistoryView(ListAPIView):
     pagination_class = CustomPagination
     queryset = Booking.objects.all()
-    # filter_backends = (DjangoFilterBackend, OrderingFilter)
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_fields = ['created_at', 'landlord_email', ]
+    ordering_fields = ['created_at', 'title', 'is_confirmed']
     serializer_class = BookingsListSerializer
 
     def get_queryset(self):

@@ -158,8 +158,8 @@ STATIC_URL = '/static/'
 
 
 SIMPLE_JWT = {
-    # "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20),
-    # "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "ALGORITHM": "HS256",

@@ -1,5 +1,4 @@
 from cities_light.models import City
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from rentapp import settings
@@ -20,6 +19,7 @@ class Listing(models.Model):
     landlord = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=1)
     landlord_email = models.CharField(max_length=255, blank=True)
     rate = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    views_count = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
