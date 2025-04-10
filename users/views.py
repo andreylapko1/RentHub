@@ -1,16 +1,8 @@
-from django.shortcuts import render
 from django.views import View
-from rest_framework import status
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
-from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework_simplejwt.views import TokenObtainPairView
-
 from users.forms import UserRegisterForm, LoginForm
-from users.models import User
 
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 
