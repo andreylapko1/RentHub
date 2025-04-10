@@ -1,5 +1,5 @@
 from django.contrib import admin
-from listings.models import Listing
+from listings.models.listing import Listing
 
 
 @admin.register(Listing)

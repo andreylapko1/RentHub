@@ -2,7 +2,7 @@ from django.db.models import Avg
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
-from .models import Listing, Review
+from .models.review import Review
 
 
 @receiver(post_save, sender=Review)

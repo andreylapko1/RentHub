@@ -52,7 +52,7 @@ class RegisterView(View):
         return render(request, "users/register.html", {"form": form})
 
     def post(self, request):
-        form = UserRegisterForm(data=request.POST)
+        form = UserRegisterForm(data=request.POST) # TODO Dont use custom form, fix
         if form.is_valid():
             user = form.save()
             login(request, user)

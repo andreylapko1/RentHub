@@ -1,6 +1,6 @@
 from django.contrib.auth import logout
 from django.db import IntegrityError
-from django.db.models import F
+from django.db.models import F, Count
 from django.shortcuts import redirect
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
@@ -8,11 +8,10 @@ from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView, \
     RetrieveAPIView
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 
 from listings.filters import ListingKeywordFilter, ListingOrderingFilter
-from listings.models import Listing, Review, ListingView
+from listings.models import *
 from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer, \
     ListingUpdateSerializer, ReviewCreateSerializer, ListingViewsListSerializer, ListingDetailSerializer
 from rentapp.pagination import CustomPagination
@@ -26,7 +25,7 @@ class ListingListView(viewsets.ModelViewSet):
     serializer_class = ListingSerializer
     pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend, OrderingFilter, ]
-    ordering_fields = ['price', 'created_at', 'updated_at', 'rate']
+    ordering_fields = ['price', 'created_at', 'updated_at', 'rate', 'views_count', 'review_count',]
     filterset_fields = ['price', 'description', 'location', 'type', 'rooms',]
     filterset_class = ListingKeywordFilter
 
@@ -36,7 +35,7 @@ class ListingListView(viewsets.ModelViewSet):
             return redirect('/login')
 
     def get_queryset(self):
-        return Listing.objects.filter(is_active=True)
+        return Listing.objects.filter(is_active=True).annotate(review_count=Count('reviews'))
 
     @action(detail=False, methods=['post'], url_path='/logout') # TODO make extra_action logout button
     def logout_user(self, request):
@@ -93,7 +92,7 @@ class UserList(ListAPIView):
     serializer_class = UserListSerializer
 
 
-class ListingViewsList(ListAPIView):
+class ListingReviewsList(ListAPIView):
     filter_backends = []
     queryset = Review.objects.all()
     serializer_class = ListingViewsListSerializer

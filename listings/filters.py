@@ -1,7 +1,7 @@
 import django_filters
 from cities_light.models import City
 from django.db.models import Q
-from listings.models import Listing
+from listings.models.listing import Listing
 
 
 class ListingOrderingFilter(django_filters.rest_framework.FilterSet):

@@ -7,12 +7,16 @@ from users.models import User
 
 
 class ListingSerializer(serializers.ModelSerializer):
+    review_count = serializers.IntegerField(read_only=True)
     location = serializers.CharField(source='location.name', read_only=True)
     class Meta:
         model = Listing
-        # fields = '__all__'
-        exclude = ('views_count', 'is_active', 'updated_at', 'created_at', 'landlord',)
+        exclude = ('views_count', 'is_active', 'updated_at', 'created_at', 'landlord', )
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['review_count'] = instance.review_count
+        return representation
 
 class ListingDetailSerializer(serializers.ModelSerializer):
     location = serializers.CharField(source='location.name', read_only=True)
@@ -62,14 +66,15 @@ class ListingViewsListSerializer(serializers.ModelSerializer):
     user_email = serializers.CharField(source='user.email', read_only=True)
     class Meta:
         model = Review
-        fields = ('rate', 'review', 'created_at', 'user_email')
+        fields = ('rate', 'review', 'created_at', 'user_email', 'listing')
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
     booking = serializers.PrimaryKeyRelatedField(queryset=Review.objects.none())
     class Meta:
         model = Review
         fields = '__all__'
-        read_only_fields = ['user', ]
+        read_only_fields = ['user', 'listing',]
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -88,6 +93,7 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('You are not allowed to review listing')
         if booking.status != 'completed':
             raise serializers.ValidationError('This booking is not completed')
+        validated_data['listing'] = booking.listing
         review = super().create(validated_data)
         return review
 
