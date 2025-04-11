@@ -7,16 +7,20 @@ from users.models import User
 
 
 class ListingSerializer(serializers.ModelSerializer):
-    review_count = serializers.IntegerField(read_only=True)
+    review_count = serializers.SerializerMethodField()
     location = serializers.CharField(source='location.name', read_only=True)
     class Meta:
         model = Listing
         exclude = ('views_count', 'is_active', 'updated_at', 'created_at', 'landlord', )
 
+    def get_review_count(self, obj):
+        return getattr(obj, 'review_count', obj.reviews.count())
+
     def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['review_count'] = instance.review_count
-        return representation
+        data = super().to_representation(instance)
+        data['review_count'] = getattr(instance, 'review_count', instance.reviews.count())
+        return data
+
 
 class ListingDetailSerializer(serializers.ModelSerializer):
     location = serializers.CharField(source='location.name', read_only=True)

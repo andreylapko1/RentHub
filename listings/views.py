@@ -99,7 +99,7 @@ class ListingReviewsList(ListAPIView):
 
     def get_queryset(self):
         listing_id = self.request.GET.get('listing_id')
-        return Review.objects.filter(booking__listing=listing_id)
+        return Review.objects.filter(listing=listing_id)
 
 class ReviewCreateView(CreateAPIView):
     queryset = Review.objects.all()

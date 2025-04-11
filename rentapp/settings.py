@@ -93,16 +93,10 @@ if env('MYSQL', default=False):
             'ENGINE': 'django.db.backends.mysql',
             'NAME': 'RentHub',
             'USER': env('DB_USER'),
-            'PASSWORD': 'F7sSda62$jsCgrEmS',
-            'HOST': 'host.docker.internal',
+            'PASSWORD': env('DB_PASSWORD'),
+            'HOST': env('DB_HOST'),
             'PORT': env('DB_PORT'),
 
-            # 'ENGINE': 'django.db.backends.mysql',
-            # 'NAME': env('DB_NAME'),
-            # 'USER': env('DB_USER'),
-            # 'PASSWORD': env('DB_PASSWORD'),
-            # 'HOST': env('DB_HOST'),
-            # 'PORT': env('DB_PORT'),
 
         }
     }
