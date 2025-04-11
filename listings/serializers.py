@@ -29,15 +29,12 @@ class ListingDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-
-
 class ListingCreateSerializer(serializers.ModelSerializer):
     location = serializers.PrimaryKeyRelatedField(queryset=City.objects.filter(country=57))
     class Meta:
         model = Listing
         read_only_fields = ('landlord',)
-        fields = ('title', 'description','location' ,'price','rooms', 'type',)
+        fields = ('title', 'description','location' ,'price','rooms', 'type','image',)
 
 
     def create(self, validated_data):

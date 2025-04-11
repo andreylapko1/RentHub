@@ -1,10 +1,14 @@
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
+from django.views.generic import TemplateView
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from users.forms import UserRegisterForm, LoginForm
 
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
+
 
 from users.utils import set_jwt_token
 
@@ -56,6 +60,13 @@ class RegisterView(View):
 
 
 
+class ProfileView( TemplateView):
+    template_name = "users/profile.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        return context
 
 
 

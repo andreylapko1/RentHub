@@ -1,16 +1,19 @@
+from django.conf.urls.static import static
 from django.urls import path
 
 from listings.views import ListingListView, ListingCreateView, UserListingListView, UserList, ListingRetrieveUpdateView, \
-    ReviewCreateView, ListingReviewsList, ListingRetrieveView
+    ReviewCreateView, ListingReviewsList, ListingRetrieveView, ListingView, ListingDetailView
 
 from rest_framework.routers import DefaultRouter
+
+from rentapp import settings
 from .views import ListingListView
 
 
 
 urlpatterns = [
-    path('', ListingListView.as_view({'get': 'list'}), name='listings'),
-    path('<int:pk>/', ListingRetrieveView.as_view(), name='listing_detail'),
+    path('', ListingListView.as_view(), name='listings_list'),
+    path('<int:pk>/', ListingDetailView.as_view(), name='listing_detail'),
     path('create/', ListingCreateView.as_view(), name='listings_create'),
     path('my/', UserListingListView.as_view(), name='listings_user_list'),
     path('userlist/', UserList.as_view(), name='userlist'),
@@ -19,3 +22,6 @@ urlpatterns = [
     path('review/create', ReviewCreateView.as_view(), name='review create'),
 
 ]
+
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

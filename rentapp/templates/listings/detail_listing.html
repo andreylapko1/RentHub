@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ads - reservation of housing</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'listings/css/detail_listing.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">RentHub</a>
+        </div>
+        <nav>
+            <a id="main" href="/">Main</a>
+            <a href="/listings/">Create listing</a>
+            <a href="/about/">About us</a>
+            <a href="/user/profile/">Profile</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="listings-container">
+            <h1>Advertisement</h1>
+            <div class="listings">
+                <div class="listing-item">
+
+                    <img src="{% if listing.image %}{{ listing.image.url }}{% else %}{% static 'listings/images/images.jpg' %}{% endif %}" alt="{{ listing.title }}" class="listing-image">
+                    <div class="listing-info">
+                        <h2>{{ listing.title }}</h2>
+                        <p>{{ listing.description }}</p>
+                        <p><strong>Price:</strong> {{ listing.price }} $</p>
+                        <p><strong>Reviews:</strong> {{ listing.review_count }} <span class="rating">★★★★★</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 RentHub — All rights are protected.</p>
+    </footer>
+</body>
+</html>
