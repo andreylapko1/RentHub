@@ -125,7 +125,7 @@ class ListingCreateView(CreateAPIView, View):
             form = ListingCreateForm(request.POST, request.FILES)
             if form.is_valid():
                 listing = form.save(commit=False)
-                listing.user = request.user
+                listing.landlord = request.user
                 listing.save()
                 return redirect('listing_detail', pk=listing.pk)
 

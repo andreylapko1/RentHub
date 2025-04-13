@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Booking</title>
+    <link rel="stylesheet" href="{% static 'bookings/css/booking_create.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">RentHub</a>
+        </div>
+        <nav>
+            <a href="/">Main</a>
+            <a href="/listings/">Listings</a>
+            <a href="/about/">About Us</a>
+            <a href="/user/profile/">Profile</a>
+        </nav>
+    </header>
+
+    <section class="form-section">
+        <h1>New Booking</h1>
+        <form action="{% url 'booking_create' %}" method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Book Now</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 RentHub. All rights reserved.</p>
+    </footer>
+</body>
+</html>

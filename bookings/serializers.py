@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError, NotFound
 
 from bookings.models import Booking
-
+from listings.models import Listing
 
 
 class BookingsListSerializer(serializers.ModelSerializer):
@@ -14,17 +14,23 @@ class BookingsListSerializer(serializers.ModelSerializer):
 
 
 
+
 class BookingCreateSerializer(serializers.ModelSerializer):
+    listing = serializers.PrimaryKeyRelatedField(queryset=Listing.objects.none())
+
     class Meta:
         model = Booking
-        fields = [
-            'listing',
-            'start_date',
-            'end_date',
-            'status',
-            'renter',
-        ]
-        read_only_fields = ['status', 'renter', 'is_confirmed']
+        fields = ['listing', 'start_date', 'end_date', 'status', 'renter']
+        read_only_fields = ['status', 'renter']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        user = self.context.get('user')
+        if user:
+            print(Listing.objects.exclude(landlord=user))
+            self.fields['listing'].queryset = Listing.objects.exclude(landlord=user)
+
+
 
     # def validate(self, data):
     #     if data['start_date'] < timezone.now() or data['end_date'] < timezone.now():

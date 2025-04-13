@@ -1,3 +1,4 @@
+from django.shortcuts import render, redirect
 from django.utils import timezone
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
@@ -7,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, \
  RetrieveDestroyAPIView
 from bookings.filters import BookingRangeDateFilter
+from bookings.form import CreateBookingForm
 from bookings.models import Booking
 from bookings.serializers import BookingsListSerializer, BookingCreateSerializer, BookingToUserSerializer, \
     ConfirmCanceledBookingsSerializer
@@ -58,6 +60,41 @@ class BookingsDetailListView(RetrieveDestroyAPIView):
 class BookingCreateView(CreateAPIView):
     serializer_class = BookingCreateSerializer
     queryset = Booking.objects.all()
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['user'] = self.request.user  # Передаем пользователя в контекст
+        return context
+
+
+    def get(self, request, *args, **kwargs):
+        if request.path.startswith('/api/'):
+            serializer = BookingCreateSerializer(context=self.get_serializer_context())
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            form = CreateBookingForm(user=request.user)
+            return render(request, 'bookings/booking_create.html', {'form': form})
+
+    def create(self, request, *args, **kwargs):
+        if request.path.startswith('/api/'):
+            return super().create(request, *args, **kwargs)
+        if request.method == 'POST':
+            form = CreateBookingForm(request.POST)
+            if form.is_valid():
+                booking = form.save(commit=False)
+                booking.renter = request.user
+                booking.save()
+                return redirect('booking_detail', pk=booking.pk)
+
+    def post(self, request, *args, **kwargs):
+        serializer = BookingCreateSerializer(user=request.user, data=request.data)
+        if serializer.is_valid():
+            booking = serializer.save()
+            return Response({"id": booking.id}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 
 
