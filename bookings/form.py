@@ -12,7 +12,7 @@ class CreateBookingForm(forms.ModelForm):
     )
     class Meta:
         model = Booking
-        fields = '__all__'
+        exclude = ('is_confirmed', 'status', 'renter', 'listings', 'landlord_email')
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
