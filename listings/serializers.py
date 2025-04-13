@@ -21,8 +21,14 @@ class ListingSerializer(serializers.ModelSerializer):
         data['review_count'] = getattr(instance, 'review_count', instance.reviews.count())
         return data
 
+class ListingViewsListSerializer(serializers.ModelSerializer):
+    user_email = serializers.CharField(source='user.email', read_only=True)
+    class Meta:
+        model = Review
+        fields = ('rate', 'review', 'created_at', 'user_email', 'listing')
 
 class ListingDetailSerializer(serializers.ModelSerializer):
+    reviews = ListingViewsListSerializer(many=True, read_only=True)
     location = serializers.CharField(source='location.name', read_only=True)
     class Meta:
         model = Listing
@@ -63,11 +69,7 @@ class ListingUpdateSerializer(serializers.ModelSerializer):
         read_only_fields = ('owner', 'review', 'rate', 'landlord')
 
 
-class ListingViewsListSerializer(serializers.ModelSerializer):
-    user_email = serializers.CharField(source='user.email', read_only=True)
-    class Meta:
-        model = Review
-        fields = ('rate', 'review', 'created_at', 'user_email', 'listing')
+
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
     booking = serializers.PrimaryKeyRelatedField(queryset=Review.objects.none())

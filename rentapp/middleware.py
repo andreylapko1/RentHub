@@ -14,7 +14,7 @@ class RedirectUnauthenticatedMiddleware:
     def __call__(self, request):
         response = self.get_response(request)
         if response.status_code == 401:
-            if request.user.is_authenticated:  # например, проверка на аутентификацию
+            if request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('login'))
         return response
 

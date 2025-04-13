@@ -45,11 +45,13 @@ class BookingsDetailListView(RetrieveDestroyAPIView):
         instance = self.get_object()
         delta = (instance.start_date - timezone.now()).days
 
-        if delta >= 2:
+        if delta >= 1:
             super().destroy(request, *args, **kwargs)
             return Response({"message": "Reservation remotely"}, status=status.HTTP_204_NO_CONTENT)
 
-        return Response({"message": "You can not remove the reservation 2 days before the arrival"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "You can not remove the reservation 1 days before the arrival"}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 

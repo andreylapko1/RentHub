@@ -90,3 +90,25 @@ h2 {
 .register-link a:hover {
     text-decoration: underline;
 }
+
+
+.input-group input[type="checkbox"]#api {
+    accent-color: #2962ff; /* синий акцент, сочетается с остальной палитрой */
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.input-group label[for="api"] {
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    gap: 6px;
+    padding: 6px 0;
+}
+

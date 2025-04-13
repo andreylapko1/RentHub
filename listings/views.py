@@ -1,7 +1,8 @@
 from django.contrib.auth import logout
+from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.db.models import F, Count
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import ListView, TemplateView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
@@ -22,52 +23,54 @@ from users.models import User
 
 
 
-# class ListingListView(viewsets.ModelViewSet):
-#     queryset = Listing.objects.all()
-#     serializer_class = ListingSerializer
-#     pagination_class = CustomPagination
-#     filter_backends = [DjangoFilterBackend, OrderingFilter, ]
-#     ordering_fields = ['price', 'created_at', 'updated_at', 'rate', 'views_count', 'review_count',]
-#     filterset_fields = ['price', 'description', 'location', 'type', 'rooms',]
-#     filterset_class = ListingKeywordFilter
-#
-#
-#     def get(self, request):
-#         if not request.user.is_authenticated:
-#             return redirect('/login')
-#
-#     def get_queryset(self):
-#         return Listing.objects.filter(is_active=True).annotate(review_count=Count('reviews'))
-#
-#     @action(detail=False, methods=['post'], url_path='/logout') # TODO make extra_action logout button
-#     def logout_user(self, request):
-#         logout(request)
-#         return Response({"detail": "User logged out successfully."}, status=status.HTTP_200_OK)
-
-
-
-class ListingListView(ListView):
-    permission_classes = (IsAuthenticated, )
+class ListingListView(viewsets.ModelViewSet):
+    paginate_by = 6
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
-    # template_name = 'listings/listings_list.html'
-    #
-    # context_object_name = 'listings'
-    # paginate_by = 10
+    pagination_class = CustomPagination
+    filter_backends = [DjangoFilterBackend, OrderingFilter, ]
+    ordering_fields = ['price', 'created_at', 'updated_at', 'rate', 'views_count', 'review_count',]
+    filterset_fields = ['price', 'description', 'location', 'type', 'rooms',]
+    filterset_class = ListingKeywordFilter
 
+
+    def list(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login')
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        if request.path.startswith('/api/'):
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+            return self.get_serializer(queryset, many=True)
+        else:
+            paginator = Paginator(queryset, self.paginate_by)
+            page_number = request.GET.get('page')
+            listings_page = paginator.get_page(page_number)
+            return render(request, 'listings/listings_list.html', {'listings': listings_page})
 
     def get_queryset(self):
         return Listing.objects.filter(is_active=True).annotate(review_count=Count('reviews'))
 
+    @action(detail=False, methods=['post'], url_path='/logout') # TODO make extra_action logout button
+    def logout_user(self, request):
+        logout(request)
+        return Response({"detail": "User logged out successfully."}, status=status.HTTP_200_OK)
 
 
 
-class ListingDetailView(TemplateView):
-    template_name = 'listings/detail_listing.html'
 
 
 
-class ListingRetrieveView(RetrieveAPIView):
+
+
+
+
+class ListingRetrieveView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsLandlord]
     serializer_class = ListingDetailSerializer
     filter_backends = []
 
@@ -77,13 +80,16 @@ class ListingRetrieveView(RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         user = self.request.user
-        try:
-            ListingView.objects.create(user=user, listing=instance)
-            Listing.objects.filter(pk=instance.id).update(views_count=F('views_count') + 1)
-        except IntegrityError:
-            pass
+        if request.path.startswith('/api/'):
+            try:
+                ListingView.objects.create(user=user, listing=instance)
+                Listing.objects.filter(pk=instance.id).update(views_count=F('views_count') + 1)
+            except IntegrityError:
+                pass
 
-        return super().retrieve(request, *args, **kwargs)
+            return super().retrieve(request, *args, **kwargs)
+        else:
+            return render(request, 'listings/detail_listing.html', {'listing': instance})
 
 
 
@@ -107,8 +113,9 @@ class ListingCreateView(CreateAPIView):
 
 class UserListingListView(ListAPIView):
     serializer_class = ListingSerializer
-    filter_backends = [DjangoFilterBackend, ]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = ListingOrderingFilter
+    ordering_fields = ['price', 'created_at', 'updated_at', 'views_count', 'review_count',]
 
     def get_queryset(self):
         return Listing.objects.filter(landlord=self.request.user)

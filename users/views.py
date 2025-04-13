@@ -24,9 +24,16 @@ class Login(APIView):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            response = redirect("/home")
+            api = request.POST.get('api')
+            print('AAAAAAAAAAAAAAAAAAAAAAAA', api)
+            if api == 'true':
+                response = redirect("/home")
+            else:
+                response = redirect("/listings")
+
             set_jwt_token(user, response=response)
             return response
+
         else:
             return render(request, "users/login.html", {"form": form})
 

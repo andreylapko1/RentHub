@@ -25,16 +25,33 @@
             <h1>Advertisement</h1>
             <div class="listings">
                 <div class="listing-item">
-
                     <img src="{% if listing.image %}{{ listing.image.url }}{% else %}{% static 'listings/images/images.jpg' %}{% endif %}" alt="{{ listing.title }}" class="listing-image">
                     <div class="listing-info">
                         <h2>{{ listing.title }}</h2>
                         <p>{{ listing.description }}</p>
+                        <p><strong>Landlord: </strong>{{ listing.landlord }}</p>
                         <p><strong>Price:</strong> {{ listing.price }} $</p>
-                        <p><strong>Reviews:</strong> {{ listing.review_count }} <span class="rating">★★★★★</span></p>
+                        <p><strong>Rate:</strong> {{ listing.rate }} <span class="rating">★★★★★</span></p>
                     </div>
                 </div>
             </div>
+
+            <section class="reviews-container">
+                <h2>Reviews:</h2>
+                {% if listing.reviews.all %}
+                    <div class="reviews-list">
+                        {% for review in listing.reviews.all %}
+                            <div class="review-item">
+                                <p><strong>{{ review.user }}</strong> rated this listing <strong>{{ review.rate }} stars</strong>.</p>
+                                <p><strong>Review:</strong> {% if review.review %}{{ review.review }}{% else %}No review yet{% endif %}</p>
+                                <p><strong>Reviewed on:</strong> {{ review.created_at|date:"d M Y, H:i" }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No reviews yet for this listing.</p>
+                {% endif %}
+            </section>
         </section>
     </main>
 

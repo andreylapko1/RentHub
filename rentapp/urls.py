@@ -27,6 +27,7 @@ urlpatterns = ([
     path('', RedirectView.as_view(url='/login/', permanent=False)),
     path('admin/', admin.site.urls),
     path('api/listings/', include('listings.urls')),
+    path('listings/', include('listings.urls')),
     path('api/bookings/', include('bookings.urls')),
     path('user/', include('users.urls')),
     path('home/', home, name='home'),
