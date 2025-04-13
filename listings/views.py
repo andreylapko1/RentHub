@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.db.models import F, Count
 from django.shortcuts import redirect, render
+from django.views import View
 from django.views.generic import ListView, TemplateView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
@@ -14,6 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from listings.filters import ListingKeywordFilter, ListingOrderingFilter
+from listings.form import ListingCreateForm
 from listings.models import *
 from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer, \
     ListingUpdateSerializer, ReviewCreateSerializer, ListingViewsListSerializer, ListingDetailSerializer
@@ -62,13 +64,6 @@ class ListingListView(viewsets.ModelViewSet):
 
 
 
-
-
-
-
-
-
-
 class ListingRetrieveView(RetrieveUpdateDestroyAPIView):
     permission_classes = [IsLandlord]
     serializer_class = ListingDetailSerializer
@@ -104,10 +99,35 @@ class ListingRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
 
 
 
-class ListingCreateView(CreateAPIView):
+class ListingCreateView(CreateAPIView, View):
     filter_backends = [ ]
     serializer_class = ListingCreateSerializer
     queryset = Listing.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        if request.path.startswith('/api/'):
+            return Response({'detail': 'Method "GET" not allowed.'}, status=405)
+
+        if not request.user.is_authenticated:
+            return redirect('/login')
+
+        form = ListingCreateForm()
+        return render(request, 'listings/listing_create.html', {'form': form})
+
+    def create(self, request, *args, **kwargs):
+        if request.path.startswith('/api/'):
+            return super().create(request, *args, **kwargs)
+
+        if not request.user.is_authenticated:
+            return redirect('/login')
+
+        if request.method == 'POST':
+            form = ListingCreateForm(request.POST, request.FILES)
+            if form.is_valid():
+                listing = form.save(commit=False)
+                listing.user = request.user
+                listing.save()
+                return redirect('listing_detail', pk=listing.pk)
 
 
 

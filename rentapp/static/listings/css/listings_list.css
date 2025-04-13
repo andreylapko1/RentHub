@@ -1,4 +1,3 @@
-/* Основной фон и типографика */
 body {
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(to bottom, #f2f6ff, #ffffff);
@@ -43,7 +42,7 @@ nav a:hover {
     color: #2962ff;
 }
 
-/* Поисковая строка */
+
 .search-bar {
     max-width: 1000px;
     margin: 40px auto 20px;
@@ -83,7 +82,6 @@ nav a:hover {
     background-color: #0039cb;
 }
 
-/* Карточки объявлений */
 .listings-container {
     max-width: 1200px;
     margin: 0 auto 40px;
@@ -158,7 +156,6 @@ h1 {
     background-color: #0039cb;
 }
 
-/* Пагинация */
 .pagination {
     display: flex;
     justify-content: center;
@@ -188,7 +185,6 @@ h1 {
     border-radius: 30px;
 }
 
-/* Футер */
 footer {
     background-color: #ffffffcc;
     color: #555;

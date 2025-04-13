@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create you listing!</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">RentHub</a>
+        </div>
+        <nav>
+            <a id="main" href="/">Main</a>
+            <a href="/listings/">Create listing</a>
+            <a href="/about/">About us</a>
+            <a href="/user/profile/">Profile</a>
+        </nav>
+    </header>
+
+  <section>
+    {% csrf_token %}
+    <form action="listing/create/" method="POST" enctype="multipart/form-data">
+
+      <label for="title">Title:</label>
+      <input id="title" type="text" name="title" required>
+
+      <label for="description">Description:</label>
+      <input id="description" type="text" name="description" required>
+
+
+        <label for="location">Location:</label>
+             <select id="location" name="location">
+                 {% for city in cities  %}
+                    <option value="{{ city.id }}"> {{city.name}}</option>
+                 {% endfor %}
+        </select>
+
+      <label for="price">Price:</label>
+      <input id="price" type="number" name="price" required>
+
+      <label for="rooms">Rooms:</label>
+      <input id="rooms" type="number" name="rooms" required>
+
+      <label for="type">Type:</label>
+      <select id="type" name="type">
+        <option value="apartment">Apartment</option>
+        <option value="home">Home</option>
+
+      </select>
+
+      <label for="image">Image:</label>
+      <input type="file" id="image" name="image">
+
+
+        <button type="submit">Submit</button>
+    </form>
+
+  </section>
+
+</body>
+</html>
