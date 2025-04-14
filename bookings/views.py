@@ -68,7 +68,9 @@ class BookingCreateView(CreateAPIView):
 
 
     def get(self, request, *args, **kwargs):
-        if request.path.startswith('/api/'):
+        if request.accepted_renderer.format == 'json':
+        # if request.path.startswith('/api/'):
+            # request.accepted_renderer.format == 'json'
             serializer = BookingCreateSerializer(context=self.get_serializer_context())
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
