@@ -87,7 +87,7 @@ class BookingCreateView(CreateAPIView):
                 return redirect('booking_detail', pk=booking.pk)
 
     def post(self, request, *args, **kwargs):
-        serializer = BookingCreateSerializer(user=request.user, data=request.data)
+        serializer = BookingCreateSerializer(context=self.get_serializer_context(), data=request.data)
         if serializer.is_valid():
             booking = serializer.save()
             return Response({"id": booking.id}, status=status.HTTP_201_CREATED)

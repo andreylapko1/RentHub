@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.shortcuts import redirect
 from django.utils import timezone
 from rest_framework import serializers
@@ -29,6 +30,19 @@ class BookingCreateSerializer(serializers.ModelSerializer):
         if user:
             print(Listing.objects.exclude(landlord=user))
             self.fields['listing'].queryset = Listing.objects.exclude(landlord=user)
+
+
+    def validate(self, data):
+        listing = data['listing']
+        start_date= data['start_date']
+        end_date= data['end_date']
+
+        crossing_data = Booking.objects.filter(listing=listing).filter(is_confirmed=True).filter(
+            Q(start_date__lt=end_date) & Q(end_date__gt=start_date)
+        )
+        if crossing_data.exists():
+            raise ValidationError('This listing is already registered on this date')
+        return data
 
 
 

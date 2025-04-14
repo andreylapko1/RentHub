@@ -1,15 +1,17 @@
-from dataclasses import fields
-
 from django import forms
+from django.db.models import Q
+from rest_framework.exceptions import ValidationError
+
 from bookings.models import Booking
 from listings import models
 from listings.models import Listing
 
 
 class CreateBookingForm(forms.ModelForm):
-    listings = forms.ModelChoiceField(
+    listing = forms.ModelChoiceField(
         queryset=models.Listing.objects.none()
     )
+
     class Meta:
         model = Booking
         exclude = ('is_confirmed', 'status', 'renter', 'listings', 'landlord_email')
@@ -21,3 +23,15 @@ class CreateBookingForm(forms.ModelForm):
             print("Фильтр:", user)
             self.fields['listing'].queryset = Listing.objects.exclude(landlord=user)
 
+    def clean(self):
+        cleaned_data = super().clean()
+        listing = cleaned_data['listing']
+        start_date= cleaned_data['start_date']
+        end_date= cleaned_data['end_date']
+        crossing_data = Booking.objects.filter(listing=listing).filter(is_confirmed=True).filter(
+            Q(start_date__lt=end_date) & Q(end_date__gt=start_date)
+        )
+
+        if crossing_data.exists():
+            raise ValidationError('This listing is already registered on this date')
+        return cleaned_data
