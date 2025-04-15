@@ -25,7 +25,7 @@
         <form action="{% url 'booking_create' %}" method="POST">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Book Now</button>
+            <button type="submit" href="/bookings/my">Book Now</button>
         </form>
     </section>
 

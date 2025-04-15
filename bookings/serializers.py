@@ -21,7 +21,7 @@ class BookingCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Booking
-        fields = ['listing', 'start_date', 'end_date', 'status', 'renter']
+        fields = ['listing', 'start_date', 'end_date', 'status', 'renter',]
         read_only_fields = ['status', 'renter']
 
     def __init__(self, *args, **kwargs):

@@ -65,7 +65,7 @@ class BookingCreateView(CreateAPIView):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['user'] = self.request.user  # Передаем пользователя в контекст
+        context['user'] = self.request.user
         return context
 
     # def get(self, request, *args, **kwargs):
@@ -89,20 +89,27 @@ class BookingCreateView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         if request.path.startswith('/api/'):
             return super().create(request, *args, **kwargs)
-        if request.method == 'POST':
-            form = CreateBookingForm(request.POST)
+        else:
+            print("POST Data:", request.POST)
+            form = CreateBookingForm(request.POST, user=self.request.user)
             if form.is_valid():
                 booking = form.save(commit=False)
                 booking.renter = request.user
                 booking.save()
-                return redirect('booking_detail', pk=booking.pk)
+                return redirect('/bookings/my')
+            else:
+                return render(request, 'bookings/booking_create.html', {'form': form})
 
     def post(self, request, *args, **kwargs):
-        serializer = BookingCreateSerializer(context=self.get_serializer_context(), data=request.data)
-        if serializer.is_valid():
-            booking = serializer.save()
-            return Response({"id": booking.id}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.path.startswith('/api/'):
+            serializer = BookingCreateSerializer(context=self.get_serializer_context(), data=request.data)
+            if serializer.is_valid():
+                booking = serializer.save()
+                return Response({"id": booking.id}, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            super().post(request, *args, **kwargs)
+            return redirect('/bookings/my')
 
 
 
