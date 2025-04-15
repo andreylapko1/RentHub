@@ -13,3 +13,9 @@ class ListingCreateForm(forms.ModelForm):
         model = Listing
         fields = ['title', 'description', 'location' ,'price', 'rooms' ,'type' ,'image']
 
+
+
+class UserListingsForm(forms.ModelForm):
+    class Meta:
+        model = Listing
+        fields = ['title', 'description', 'price', 'rooms' ,'type' ,'image']

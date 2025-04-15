@@ -15,7 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from listings.filters import ListingKeywordFilter, ListingOrderingFilter
-from listings.form import ListingCreateForm
+from listings.form import ListingCreateForm, UserListingsForm
 from listings.models import *
 from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer, \
     ListingUpdateSerializer, ReviewCreateSerializer, ListingViewsListSerializer, ListingDetailSerializer
@@ -57,10 +57,6 @@ class ListingListView(viewsets.ModelViewSet):
     def get_queryset(self):
         return Listing.objects.filter(is_active=True).annotate(review_count=Count('reviews'))
 
-    @action(detail=False, methods=['post'], url_path='/logout') # TODO make extra_action logout button
-    def logout_user(self, request):
-        logout(request)
-        return Response({"detail": "User logged out successfully."}, status=status.HTTP_200_OK)
 
 
 
@@ -140,6 +136,13 @@ class UserListingListView(ListAPIView):
     def get_queryset(self):
         return Listing.objects.filter(landlord=self.request.user)
 
+    def get(self, request, *args, **kwargs):
+        if request.path.startswith('/api/'):
+            serializer = ListingSerializer(instance=self.get_queryset())
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            form = UserListingsForm(request.GET)
+            return render(request, 'listings/user_listings.html', {'form': form, 'listings': self.get_queryset()})
 
 class UserList(ListAPIView):
     queryset = User.objects.all()

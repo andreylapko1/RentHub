@@ -35,3 +35,10 @@ class CreateBookingForm(forms.ModelForm):
         if crossing_data.exists():
             raise ValidationError('This listing is already registered on this date')
         return cleaned_data
+
+
+
+class UserBookingForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = '__all__'
