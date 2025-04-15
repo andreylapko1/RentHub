@@ -41,6 +41,7 @@ class CreateBookingForm(forms.ModelForm):
     def save(self, commit=True):
         booking = super().save(commit=False)
         listing = self.cleaned_data['listing']
+        booking.landlord_email = listing.landlord
         if listing:
             booking.title = listing.title
         if commit:

@@ -122,6 +122,7 @@ class ListingCreateView(CreateAPIView, View):
             if form.is_valid():
                 listing = form.save(commit=False)
                 listing.landlord = request.user
+                listing.landlord_email = request.user.email
                 listing.save()
                 return redirect('listing_detail', pk=listing.pk)
 

@@ -1,12 +1,7 @@
-from django.conf.urls.static import static
 from django.urls import path
-
 from listings.views import ListingListView, ListingCreateView, UserListingListView, UserList, ListingRetrieveUpdateView, \
     ReviewCreateView, ListingReviewsList, ListingRetrieveView
 
-from rest_framework.routers import DefaultRouter
-
-from rentapp import settings
 from .views import ListingListView
 
 

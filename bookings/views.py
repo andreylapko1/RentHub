@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from rest_framework.filters import OrderingFilter
@@ -8,6 +9,8 @@ from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, \
  RetrieveDestroyAPIView
+from rest_framework.viewsets import ModelViewSet
+
 from bookings.filters import BookingRangeDateFilter
 from bookings.form import CreateBookingForm, UserBookingForm
 from bookings.models import Booking
@@ -116,7 +119,8 @@ class BookingCreateView(CreateAPIView):
 
 
 
-class BookingsToUsersView(ListAPIView):
+class BookingsToUsersView(ModelViewSet):
+    paginate_by = 6
     queryset = Booking.objects.all()
     pagination_class = CustomPagination
     serializer_class = BookingToUserSerializer
@@ -127,6 +131,25 @@ class BookingsToUsersView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Booking.objects.filter(landlord_email=user)
+
+
+    def list(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('/login')
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        if request.path.startswith('/api/'):
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = self.get_serializer(queryset, many=True)
+                return self.get_paginated_response(serializer.data)
+            return self.get_serializer(queryset, many=True)
+        else:
+            paginator = Paginator(queryset, self.paginate_by)
+            page = request.GET.get('page')
+            bookings = paginator.get_page(page)
+            return render(request, 'bookings/bookings_list.html', {'bookings': bookings})
 
 
 class ConfirmCanceledBookingsView(RetrieveUpdateAPIView):

@@ -22,13 +22,12 @@ class BookingCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = ['listing', 'start_date', 'end_date', 'status', 'renter',]
-        read_only_fields = ['status', 'renter']
+        read_only_fields = ['status', 'renter', ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         user = self.context.get('user')
         if user:
-            print(Listing.objects.exclude(landlord=user))
             self.fields['listing'].queryset = Listing.objects.exclude(landlord=user)
 
 
@@ -52,9 +51,9 @@ class BookingCreateSerializer(serializers.ModelSerializer):
     #     return data
 
     def create(self, validated_data):
+
         listing = validated_data.get('listing')
-        landlord_email = listing.landlord_email
-        validated_data['landlord_email'] = landlord_email
+        validated_data['landlord_email'] = listing.landlord_email
         validated_data['renter'] = self.context['request'].user
         validated_data['title'] = listing.title
         return super().create(validated_data)
