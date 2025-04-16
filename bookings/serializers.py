@@ -75,21 +75,29 @@ class ConfirmCanceledBookingsSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['title', 'landlord_email', 'status', 'start_date', 'end_date', 'renter', 'listing', ]
 
-
-
     def update(self, instance, validated_data):
+        user = self.context['request'].user
+        start_date = instance.start_date
+        end_date = instance.end_date
 
-        if not instance:
-            raise NotFound(detail="Booking with the provided ID does not exist.")
+
+        overlapping_bookings = Booking.objects.filter(
+            landlord_email=user.email,
+            is_confirmed=True,
+        ).exclude(id=instance.id).filter(
+            Q(start_date__lte=end_date) & Q(end_date__gte=start_date)
+        )
+        if overlapping_bookings.exists():
+            raise ValidationError("You cannot confirm this booking because it overlaps with another confirmed booking.")
+
 
         canceled = validated_data.get('canceled', False)
         if canceled and instance.is_confirmed:
-            raise ValidationError("Choose one thing")
+            raise ValidationError("You cannot cancel a confirmed booking.")
 
         if canceled:
             instance.status = 'canceled'
             instance.is_confirmed = False
-
         else:
             instance.is_confirmed = True
             instance.status = 'confirmed'

@@ -24,12 +24,9 @@ header {
     color: #2962ff;
 }
 
-
 #main {
     color: #2962ff;
 }
-
-
 
 nav a {
     color: #555;
@@ -42,17 +39,23 @@ nav a:hover {
     color: #2962ff;
 }
 
-
+/* 🔧 Исправленная поисковая строка */
 .search-bar {
-    max-width: 1000px;
-    margin: 40px auto 20px;
+    width: 100%;
     padding: 0 20px;
+    margin: 40px 0 20px;
+}
+
+.search-bar form {
     display: flex;
-    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 10px;
 }
 
 .search-input {
-    width: 70%;
+    flex: 1;
     padding: 14px 18px;
     border: 2px solid #e0e0e0;
     border-radius: 50px;
@@ -72,10 +75,10 @@ nav a:hover {
     color: #fff;
     border: none;
     border-radius: 50px;
-    margin-left: 10px;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    white-space: nowrap;
 }
 
 .search-button:hover {
@@ -194,3 +197,15 @@ footer {
     font-size: 15px;
 }
 
+/* 📱 Адаптив для мобилок */
+@media (max-width: 600px) {
+    .search-bar form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-button {
+        width: 100%;
+        margin-left: 0;
+    }
+}

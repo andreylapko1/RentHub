@@ -22,8 +22,10 @@
 
     <main>
         <section class="search-bar">
-            <input type="text" placeholder="Search by name or location" class="search-input">
-            <button class="search-button">Search</button>
+            <form method="get">
+                <input type="text" name="q" placeholder="Search by name or location" class="search-input" value="{{ request.GET.q }}">
+                <button type="submit" class="search-button">Search</button>
+            </form>
         </section>
 
         <section class="listings-container">
@@ -36,6 +38,7 @@
                             <div class="listing-info">
                                 <h2>{{ listing.title }}</h2>
                                 <p>{{ listing.description }}</p>
+                                <p><strong>Location: </strong>{{ listing.location.name_ascii }}</p>
                                 <p><strong>Price:</strong> {{ listing.price }} $</p>
                                 <p><strong>Reviews:</strong> {{ listing.review_count }} <span class="rating">★★★★★</span></p>
                                 <a href="{% url 'listing_detail' listing.id %}" class="view-details">Detailed</a>

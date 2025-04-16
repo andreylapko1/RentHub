@@ -16,8 +16,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from bookings.models import Booking
 from listings.filters import ListingKeywordFilter, ListingOrderingFilter
-from listings.form import ListingCreateForm, UserListingsForm, ListingRetrieveUpdateForm
+from listings.form import ListingCreateForm, UserListingsForm, ListingRetrieveUpdateForm, ReviewCreateForm
 from listings.models import *
 from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer, \
     ListingUpdateSerializer, ReviewCreateSerializer, ListingViewsListSerializer, ListingDetailSerializer
@@ -28,6 +29,7 @@ from users.models import User
 
 
 class ListingListView(viewsets.ModelViewSet):
+
     paginate_by = 6
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
@@ -39,6 +41,7 @@ class ListingListView(viewsets.ModelViewSet):
 
 
     def list(self, request, *args, **kwargs):
+
         if not request.user.is_authenticated:
             return redirect('/login')
 
@@ -51,6 +54,9 @@ class ListingListView(viewsets.ModelViewSet):
                 return self.get_paginated_response(serializer.data)
             return self.get_serializer(queryset, many=True)
         else:
+            query_params = request.GET.get('q', '')
+            if query_params:
+                queryset = queryset.filter(title__icontains=query_params) | queryset.filter(description__icontains=query_params) | queryset.filter(location__name_ascii__icontains=query_params)
             paginator = Paginator(queryset, self.paginate_by)
             page_number = request.GET.get('page')
             listings_page = paginator.get_page(page_number)
@@ -172,6 +178,9 @@ class ListingCreateView(CreateAPIView, View):
                 listing.landlord_email = request.user.email
                 listing.save()
                 return redirect('listing_detail', pk=listing.pk)
+        else:
+            form = ListingCreateForm()
+        return render(request, 'listings/listing_create.html', {'form': form})
 
 
 
@@ -210,6 +219,40 @@ class ReviewCreateView(CreateAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewCreateSerializer
     filter_backends = []
+
+
+class ReviewCreateHTMLView(View):
+    queryset = Review.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        # listing = Listing.objects.get(pk=kwargs['pk'])
+        form = ReviewCreateForm()
+        return render(request, 'listings/review_create.html', {'form': form})
+
+
+    def post(self, request, *args, **kwargs):
+        listing = Listing.objects.get(pk=kwargs['pk'])
+        form = ReviewCreateForm(request.POST)
+        print(request.POST)
+        if form.is_valid():
+            completed_booking = Booking.objects.filter(renter=self.request.user, listing=listing, status='completed',
+                                                       is_confirmed=True)
+            if completed_booking.exists():
+                review = form.save(commit=False)
+                review.user = self.request.user
+                review.booking = completed_booking.first()
+                review.listing = listing
+                review.save()
+                return redirect('listing_detail', pk=listing.pk)
+            else:
+                form.add_error(None, 'You can only leave a review for completed and confirmed bookings.')
+        else:
+            return render(request, 'listings/review_create.html', {'form': form})
+
+
+
+
+
 
 
 # Create your views here.

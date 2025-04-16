@@ -1,4 +1,4 @@
-/* Общие стили */
+
 body {
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(to bottom, #f0f4f8, #ffffff);
@@ -7,7 +7,6 @@ body {
     color: #333;
 }
 
-/* Заголовок и навигация */
 header {
     background-color: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(8px);
@@ -36,7 +35,6 @@ nav a:hover {
     color: #2962ff;
 }
 
-/* Основной контент */
 main {
     padding: 50px 20px;
 }
@@ -53,7 +51,6 @@ h1 {
     color: #212121;
 }
 
-/* Стили для карточек */
 .listings {
     display: flex;
     flex-wrap: wrap;
@@ -69,7 +66,7 @@ h1 {
     flex-direction: column;
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    width: calc(33.333% - 16px);  /* Размер карточек на десктопе */
+    width: calc(33.333% - 16px);
     margin: 0 auto;
     padding: 20px;
 }
@@ -112,7 +109,7 @@ h1 {
     color: #ffd600;
 }
 
-/* Стили для отзывов */
+
 .reviews-container {
     margin-top: 40px;
     padding: 20px;
@@ -147,7 +144,7 @@ h1 {
     color: #ffd600;
 }
 
-/* Подвал */
+
 footer {
     background-color: rgba(255, 255, 255, 0.85);
     color: #555;
@@ -159,4 +156,26 @@ footer {
 
 footer p {
     margin: 0;
+}
+.leave-review-button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 30px;
+    background-color: #2962ff;
+    color: #fff;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.leave-review-button:hover {
+    background-color: #0039cb;
+    transform: translateY(-3px); /* Легкий эффект поднятия */
+}
+
+.leave-review-button:active {
+    transform: translateY(0); /* Эффект при нажатии */
 }

@@ -1,6 +1,9 @@
 from django.core.paginator import Paginator
+from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
+from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
@@ -159,14 +162,13 @@ class ConfirmCanceledBookingsView(RetrieveUpdateAPIView):
     ordering_fields = ['created_at', 'title', 'is_confirmed']
     serializer_class = ConfirmCanceledBookingsSerializer
 
-
-
     def get(self, request, *args, **kwargs):
+        booking = Booking.objects.get(pk=kwargs['pk'])
+        print(f'Booking found: {booking}')
         if request.path.startswith('/api/'):
-            serializer = self.get_serializer(data=request.data)
+            serializer = ConfirmCanceledBookingsSerializer(booking, many=False)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            booking = Booking.objects.get(pk=kwargs['pk'])
             form = BookingDetailForm(data=request.data)
             return render(request, 'bookings/booking_detail.html', {'form': form, 'booking': booking})
 
@@ -199,12 +201,26 @@ def confirm_booking(request, pk):
     if request.method == 'POST':
         booking = Booking.objects.get(pk=pk)
         if booking.landlord_email == request.user.email:
+            start_date = booking.start_date
+            end_date = booking.end_date
+            overlapping_bookings = Booking.objects.filter(
+                landlord_email=request.user.email,
+                is_confirmed=True,
+            ).exclude(id=booking.id).filter(
+                Q(start_date__lte=end_date) & Q(end_date__gte=start_date)
+            )
+            if overlapping_bookings.exists():
+                return JsonResponse({
+                    'error': 'You cannot confirm this booking because it overlaps with another confirmed booking.'
+                }, status=400)
             booking.is_confirmed = True
             booking.status = 'confirmed'
             booking.save()
             return redirect('bookings_confirmation', pk=booking.id)
         else:
             return redirect('/bookings/applications')
+    else:
+        return render(request, 'bookings/confirm_booking.html', {'pk': pk})
 
 class UserBookingHistoryView(ListAPIView):
     pagination_class = CustomPagination
