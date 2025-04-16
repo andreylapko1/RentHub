@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ads - reservation of housing</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'listings/css/listings_list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bookings/css/bookings_list.css' %}">
 </head>
 <body>
     <header>
@@ -33,25 +33,27 @@
                     {% for booking in bookings %}
                         <div class="booking-item">
                             <div class="listing-info">
-                                <h2>{{ booking.title }}</h2>
+                                <a href="{% url 'bookings_confirmation' booking.id %}">
+                                    <h2>{{ booking.title }}</h2>
+                                </a>
                                 <p>{{ booking.renter }}</p>
                                 <p><strong>Start date:</strong> {{ booking.start_date }}</p>
-                              <p><strong>End date:</strong> {{ booking.end_date }} </p>
+                                <p><strong>End date:</strong> {{ booking.end_date }} </p>
                             </div>
                         </div>
                     {% endfor %}
                 </div>
                 <div class="pagination">
-                    {% if listings.has_previous %}
+                    {% if bookings.has_previous %}
                         <a href="?page=1">&laquo; First</a>
-                        <a href="?page={{ booking.previous_page_number }}">Previous</a>
+                        <a href="?page={{ bookings.previous_page_number }}">Previous</a>
                     {% endif %}
                     <span class="current">
-                        Page {{ booking.number }} of {{ booking.paginator.num_pages }}
+                        Page {{ bookings.number }} of {{ bookings.paginator.num_pages }}
                     </span>
-                    {% if booking.has_next %}
-                        <a href="?page={{ booking.next_page_number }}">Next</a>
-                        <a href="?page={{ booking.paginator.num_pages }}">Last &raquo;</a>
+                    {% if bookings.has_next %}
+                        <a href="?page={{ bookings.next_page_number }}">Next</a>
+                        <a href="?page={{ bookings.paginator.num_pages }}">Last &raquo;</a>
                     {% endif %}
                 </div>
             {% else %}

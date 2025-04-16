@@ -14,7 +14,7 @@ class ListingSerializer(serializers.ModelSerializer):
         exclude = ('views_count', 'is_active', 'updated_at', 'created_at', 'landlord', )
 
     def get_review_count(self, obj):
-        return getattr(obj, 'review_count', obj.reviews.count())
+        return obj.reviews.count()
 
     def to_representation(self, instance):
         data = super().to_representation(instance)

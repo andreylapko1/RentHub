@@ -24,12 +24,9 @@ header {
     color: #2962ff;
 }
 
-
 #main {
     color: #2962ff;
 }
-
-
 
 nav a {
     color: #555;
@@ -41,7 +38,6 @@ nav a {
 nav a:hover {
     color: #2962ff;
 }
-
 
 .search-bar {
     max-width: 1000px;
@@ -99,32 +95,30 @@ h1 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 30px;
+    justify-items: center;
+    align-items: center;
 }
 
-.booking-info-item {
+.booking-item {
     background-color: #ffffffcc;
     backdrop-filter: blur(3px);
     border-radius: 20px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
     overflow: hidden;
     transition: transform 0.3s;
+    width: 100%;
+    max-width: 400px;
 }
 
-.booking-info-item:hover {
+.booking-item:hover {
     transform: translateY(-5px);
 }
 
-.booking-info {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+.listing-info {
+    padding: 20px 24px;
 }
 
-.booking-info {
-    padding: 20px;
-}
-
-.booking-info h2 {
+.listing-info h2 {
     font-size: 22px;
     color: #2962ff;
     margin-bottom: 10px;
@@ -134,26 +128,6 @@ h1 {
     font-size: 16px;
     color: #444;
     margin: 6px 0;
-}
-
-.rating {
-    color: #ffd600;
-}
-
-.view-details {
-    display: inline-block;
-    margin-top: 15px;
-    padding: 10px 22px;
-    background-color: #2962ff;
-    color: white;
-    border-radius: 40px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: background-color 0.3s;
-}
-
-.view-details:hover {
-    background-color: #0039cb;
 }
 
 .pagination {
@@ -193,4 +167,3 @@ footer {
     border-top: 1px solid #eee;
     font-size: 15px;
 }
-

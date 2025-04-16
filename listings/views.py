@@ -139,7 +139,7 @@ class UserListingListView(ListAPIView):
 
     def get(self, request, *args, **kwargs):
         if request.path.startswith('/api/'):
-            serializer = ListingSerializer(instance=self.get_queryset())
+            serializer = ListingSerializer(instance=self.get_queryset(), many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             form = UserListingsForm(request.GET)

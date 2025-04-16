@@ -4,21 +4,18 @@ from django.utils import timezone
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, \
  RetrieveDestroyAPIView
 from rest_framework.viewsets import ModelViewSet
 
 from bookings.filters import BookingRangeDateFilter
-from bookings.form import CreateBookingForm, UserBookingForm
+from bookings.form import CreateBookingForm, UserBookingForm, BookingDetailForm
 from bookings.models import Booking
 from bookings.serializers import BookingsListSerializer, BookingCreateSerializer, BookingToUserSerializer, \
     ConfirmCanceledBookingsSerializer
-from listings.views import ListingRetrieveUpdateView
 from rentapp.pagination import CustomPagination
-from rentapp.permissions import IsLandlord, IsLandlordEmail, IsLandlordOrForbidden
+from rentapp.permissions import IsLandlordOrForbidden
 
 
 class BookingsListView(ListAPIView):
@@ -46,6 +43,9 @@ class BookingsDetailListView(RetrieveDestroyAPIView):
     filter_backends = [ ]
     queryset = Booking.objects.all()
     serializer_class = BookingsListSerializer
+
+
+
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -93,7 +93,7 @@ class BookingCreateView(CreateAPIView):
         if request.path.startswith('/api/'):
             return super().create(request, *args, **kwargs)
         else:
-            print("POST Data:", request.POST)
+            print("POST dara:", request.POST)
             form = CreateBookingForm(request.POST, user=self.request.user)
             if form.is_valid():
                 booking = form.save(commit=False)
@@ -161,6 +161,18 @@ class ConfirmCanceledBookingsView(RetrieveUpdateAPIView):
 
 
 
+    def get(self, request, *args, **kwargs):
+        if request.path.startswith('/api/'):
+            serializer = self.get_serializer(data=request.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            booking = Booking.objects.get(pk=kwargs['pk'])
+            form = BookingDetailForm(data=request.data)
+            return render(request, 'bookings/booking_detail.html', {'form': form, 'booking': booking})
+
+
+
+
 
 
 class UserBookingsListView(ListAPIView):
@@ -183,6 +195,17 @@ class UserBookingsListView(ListAPIView):
             return render(request, 'bookings/user_bookings.html', {'form': form, 'bookings': self.get_queryset()})
 
 
+def confirm_booking(request, pk):
+    if request.method == 'POST':
+        booking = Booking.objects.get(pk=pk)
+        if booking.landlord_email == request.user.email:
+            booking.is_confirmed = True
+            print(booking.is_confirmed)
+            booking.status = 'confirmed'
+            booking.save()
+            return redirect('bookings_confirmation', pk=booking.id)
+        else:
+            return redirect('/bookings/applications')
 
 class UserBookingHistoryView(ListAPIView):
     pagination_class = CustomPagination

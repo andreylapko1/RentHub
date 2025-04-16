@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ booking.title }} - Booking Detail</title>
+    <link rel="stylesheet" href="{% static 'bookings/css/booking_detail.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">RentHub</a>
+        </div>
+        <nav>
+            <a href="/">Main</a>
+            <a href="/listings/create">Create listing</a>
+            <a href="/bookings/create/">Create booking</a>
+            <a href="/user/profile/">Profile</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="detail-container">
+            <h1>{{ booking.title }}</h1>
+            <div class="detail-card">
+                <p><strong>Renter:</strong> {{ booking.renter }}</p>
+                <p><strong>Start date:</strong> {{ booking.start_date }}</p>
+                <p><strong>End date:</strong> {{ booking.end_date }}</p>
+                <p><strong>Landlord email:</strong> {{ booking.landlord_email }}</p>
+                <p><strong>Status:</strong> {{ booking.status }}</p>
+                <p><strong>Confirmed:</strong> {{ booking.is_confirmed }}</p>
+            </div>
+
+            <form method="post" action="{% url 'confirm_booking_html' booking.id %}">
+                {% csrf_token %}
+                {% if not booking.is_confirmed %}
+                    <button type="submit" class="confirm-button">Confirm Booking</button>
+                {% else %}
+                    <p class="confirmed-message">✅ Booking confirmed</p>
+                {% endif %}
+            </form>
+
+            <a href="{% url 'bookings_applications' %}" class="back-button">← Back to listings</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 RentHub — All rights are protected.</p>
+    </footer>
+</body>
+</html>

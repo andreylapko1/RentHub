@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
     'rest_framework',
+    'drf_yasg',
     'cities_light',
     'django_filters',
     'bookings',

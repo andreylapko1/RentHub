@@ -52,3 +52,9 @@ class UserBookingForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = '__all__'
+
+
+class BookingDetailForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        exclude = ( 'listings',)
