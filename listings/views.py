@@ -2,6 +2,7 @@ from django.contrib.auth import logout
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.db.models import F, Count
+from django.http import JsonResponse
 from django.shortcuts import redirect, render, get_list_or_404, get_object_or_404
 from django.views import View
 from django.views.generic import ListView, TemplateView
@@ -238,6 +239,8 @@ class ReviewCreateHTMLView(View):
             completed_booking = Booking.objects.filter(renter=self.request.user, listing=listing, status='completed',
                                                        is_confirmed=True)
             if completed_booking.exists():
+                if Review.objects.filter(user=self.request.user, listing=listing).exists():
+                    return JsonResponse({'error': 'Review already exists'}, status=status.HTTP_409_CONFLICT)
                 review = form.save(commit=False)
                 review.user = self.request.user
                 review.booking = completed_booking.first()
@@ -246,8 +249,8 @@ class ReviewCreateHTMLView(View):
                 return redirect('listing_detail', pk=listing.pk)
             else:
                 form.add_error(None, 'You can only leave a review for completed and confirmed bookings.')
-        else:
-            return render(request, 'listings/review_create.html', {'form': form})
+
+        return render(request, 'listings/review_create.html', {'form': form})
 
 
 

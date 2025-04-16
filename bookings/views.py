@@ -204,6 +204,7 @@ def confirm_booking(request, pk):
             start_date = booking.start_date
             end_date = booking.end_date
             overlapping_bookings = Booking.objects.filter(
+                listing=booking.listing,
                 landlord_email=request.user.email,
                 is_confirmed=True,
             ).exclude(id=booking.id).filter(
