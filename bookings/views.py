@@ -200,7 +200,6 @@ def confirm_booking(request, pk):
         booking = Booking.objects.get(pk=pk)
         if booking.landlord_email == request.user.email:
             booking.is_confirmed = True
-            print(booking.is_confirmed)
             booking.status = 'confirmed'
             booking.save()
             return redirect('bookings_confirmation', pk=booking.id)

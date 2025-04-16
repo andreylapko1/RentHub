@@ -30,7 +30,7 @@
         {% for listing in listings %}
         <tr id="listing-{{ listing.id }}">
             <td>{{ listing.id }}</td>
-            <td>{{ listing.title }}</td>
+            <td><a href="{{ listing.id }}/update">{{ listing.title }}</a></td>
             <td>{{ listing.description }}</td>
             <td>{{ listing.location }}</td>
             <td>{{ listing.price }}</td>

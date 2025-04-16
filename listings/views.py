@@ -2,20 +2,22 @@ from django.contrib.auth import logout
 from django.core.paginator import Paginator
 from django.db import IntegrityError
 from django.db.models import F, Count
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_list_or_404, get_object_or_404
 from django.views import View
 from django.views.generic import ListView, TemplateView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import ListCreateAPIView, ListAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView, \
     RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 from listings.filters import ListingKeywordFilter, ListingOrderingFilter
-from listings.form import ListingCreateForm, UserListingsForm
+from listings.form import ListingCreateForm, UserListingsForm, ListingRetrieveUpdateForm
 from listings.models import *
 from listings.serializers import ListingSerializer, ListingCreateSerializer, UserListSerializer, \
     ListingUpdateSerializer, ReviewCreateSerializer, ListingViewsListSerializer, ListingDetailSerializer
@@ -92,6 +94,51 @@ class ListingRetrieveUpdateView(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         pk = self.kwargs.get('pk')
         return Listing.objects.filter(pk=pk)
+
+
+    def get(self, request, *args, **kwargs):
+        if request.path.startswith('/api/'):
+            serializer = self.get_serializer(instance=self.get_queryset(), many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return render(request, 'listings/detail_listing.html', {'listing': self.get_object()})
+
+
+
+
+
+class ListingRetrieveUpdateHTMLView(View):
+
+
+    def dispatch(self, request, *args, **kwargs):
+        listing = get_object_or_404(Listing, pk=kwargs['pk'])
+
+
+        if listing.landlord != request.user:
+            raise PermissionDenied("You do not have permission to perform this action")
+        return super().dispatch(request, *args, **kwargs)
+
+
+    def get(self, request, *args, **kwargs):
+        listing = get_object_or_404(Listing, pk=kwargs['pk'])
+        form = ListingRetrieveUpdateForm(instance=listing)
+        return render(request, 'listings/listing_update.html', {'listing': listing, 'form': form})
+
+
+    def post(self, request, *args, **kwargs):
+        listing = get_object_or_404(Listing, pk=kwargs['pk'])
+        form = ListingRetrieveUpdateForm(request.POST, request.FILES,instance=listing)
+        if form.is_valid():
+            form.save()
+            return redirect('listing_detail', pk=kwargs['pk'])
+        return render(request, 'listings/listing_update.html', {'form':form,'listing': listing})
+
+
+    def delete(self, request, *args, **kwargs):
+        listing = get_object_or_404(Listing, pk=kwargs['pk'])
+        listing.delete()
+        return redirect('listing_detail', pk=kwargs['pk'])
+
 
 
 

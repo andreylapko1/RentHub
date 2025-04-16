@@ -18,3 +18,10 @@ class UserListingsForm(forms.ModelForm):
     class Meta:
         model = Listing
         fields = ['title', 'description', 'price', 'rooms' ,'type' ,'landlord_email']
+
+
+
+class ListingRetrieveUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Listing
+        exclude = ['landlord_email', 'rate', 'created_at', 'updated_at','landlord', 'views_count', ]
