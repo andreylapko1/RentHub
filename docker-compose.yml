@@ -13,7 +13,7 @@ services:
       - static_volume:/RentHub/staticfiles
       - media_volume:/RentHub/media
     environment:
-      DJANGO_SECRET_KEY: "django-insecure-1i6=q%#p36f%$+b9c8gj=%@(j7catsg1qr(8pxe=*g=^hu+a5-"
+      SECRET_KEY: "django-insecure-1i6=q%#p36f%$+b9c8gj=%@(j7catsg1qr(8pxe=*g=^hu+a5-"
       DJANGO_DEBUG: "0"
       DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,16.170.227.155"
       DB_NAME: "rentappdb"
