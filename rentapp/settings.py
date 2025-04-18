@@ -29,7 +29,7 @@ env.read_env(BASE_DIR / ".env")
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG', default=False)
+DEBUG = True
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
     'rest_framework',
     'drf_yasg',
@@ -71,8 +72,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-                os.path.join(BASE_DIR, 'templates'),
-                os.path.join(BASE_DIR, 'rentapp/templates')
+                # os.path.join(BASE_DIR, 'templates'),
+                os.path.join(BASE_DIR, 'rentapp', 'templates')
                  ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -88,6 +89,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'rentapp.wsgi.application'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
@@ -163,8 +165,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'rentapp/static',
+    os.path.join(BASE_DIR, 'rentapp', 'static'),
 ]
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
