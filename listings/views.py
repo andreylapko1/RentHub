@@ -31,13 +31,14 @@ from users.models import User
 
 class ListingListView(viewsets.ModelViewSet):
 
+
     paginate_by = 6
     queryset = Listing.objects.all()
     serializer_class = ListingSerializer
     pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend, OrderingFilter, ]
     ordering_fields = ['price', 'created_at', 'updated_at', 'rate', 'views_count', 'review_count',]
-    filterset_fields = ['price', 'description', 'location', 'type', 'rooms',]
+    filterset_fields = ['price', 'location', 'type', 'rooms',]
     filterset_class = ListingKeywordFilter
 
 
@@ -70,7 +71,7 @@ class ListingListView(viewsets.ModelViewSet):
 
 
 class ListingRetrieveView(RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsLandlord]
+    permission_classes = [IsLandlord, IsAuthenticated]
     serializer_class = ListingDetailSerializer
     filter_backends = []
 

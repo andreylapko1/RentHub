@@ -34,7 +34,7 @@ class ListingKeywordFilter(django_filters.FilterSet):
 
     class Meta:
         model = Listing
-        fields = ['price', 'description', 'location', 'type', 'rooms', 'keyword']
+        fields = ['price', 'location', 'type', 'rooms', 'keyword']
 
     def filter_by_keywords(self, queryset, name, value):
         return Listing.objects.filter(
