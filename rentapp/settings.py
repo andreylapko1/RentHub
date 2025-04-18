@@ -101,8 +101,8 @@ if env('MYSQL', default=False):
             'NAME': env('DB_NAME'),
             'USER': env('DB_USER'),
             'PASSWORD': env('DB_PASSWORD'),
-            'HOST': 'mysql', ## был env
-            'PORT': '3306', ## был env
+            'HOST': env('DB_HOST'),
+            'PORT': env('DB_PORT'),
         }
     }
 else:
