@@ -1,0 +1,144 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #f0f4ff, #ffffff);
+    margin: 0;
+    padding: 0;
+    color: #2c3e50;
+}
+
+header {
+    background-color: #ffffffcc;
+    backdrop-filter: blur(6px);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.logo a {
+    font-size: 28px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #2962ff;
+}
+
+nav a {
+    color: #555;
+    text-decoration: none;
+    margin-left: 25px;
+    font-weight: 500;
+}
+
+nav a:hover {
+    color: #2962ff;
+}
+
+main {
+    padding: 40px 20px;
+}
+
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    background: #ffffffcc;
+    backdrop-filter: blur(4px);
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+}
+
+.form-container h1 {
+    font-size: 32px;
+    color: #2962ff;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+form p {
+    margin-bottom: 15px;
+    font-size: 17px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.image-preview {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.listing-image {
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.save-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-right: 15px;
+}
+
+.save-button:hover {
+    background-color: #388e3c;
+}
+
+.delete-button {
+    background-color: #e53935;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+    background-color: #c62828;
+}
+
+.back-button {
+    display: inline-block;
+    margin-top: 30px;
+    text-decoration: none;
+    background-color: #2962ff;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.back-button:hover {
+    background-color: #0039cb;
+}
+
+footer {
+    background-color: #ffffffcc;
+    color: #555;
+    text-align: center;
+    padding: 25px;
+    border-top: 1px solid #eee;
+    font-size: 15px;
+}

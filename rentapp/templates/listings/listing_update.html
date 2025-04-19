@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Listing — {{ listing.title }}</title>
+    <link rel="stylesheet" href="{% static 'listings/css/listing_update.css' %}">
+</head>
+<body>
+<header>
+    <div class="logo">
+        <a href="/">RentHub</a>
+    </div>
+    <nav>
+        <a href="/">Main</a>
+        <a href="/listings/create">Create listing</a>
+        <a href="/bookings/create/">Create booking</a>
+        <a href="/user/profile/">Profile</a>
+    </nav>
+</header>
+
+<main>
+    <section class="form-container">
+        <h1>Update Listing: {{ listing.title }}</h1>
+
+        <!-- Отображение изображения -->
+        <div class="image-preview">
+            {% if listing.image %}
+                <img src="{{ listing.image.url }}" alt="Listing image" class="listing-image">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="save-button">💾 Save Changes</button>
+        </form>
+
+        <form method="post" action="{% url 'my_listing_update' listing.id %}" onsubmit="return confirm('Are you sure?');">
+            {% csrf_token %}
+            <input type="hidden" name="_method" value="delete">
+            <button type="submit" class="delete-button">🗑️ Delete Listing</button>
+        </form>
+
+        <a href="{% url 'listing_detail' listing.id %}" class="back-button">← Back to Detail</a>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2025 RentHub — All rights are protected.</p>
+</footer>
+</body>
+</html>

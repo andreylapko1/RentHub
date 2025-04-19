@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile — RentHub</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'users/css/profile.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">RentHub</a>
+        </div>
+        <nav>
+            <a href="/listings">Main</a>
+            <a href="/bookings/my">My bookings</a>
+            <a id="listing"  href="/listings/my/">My listings</a>
+            <a id="applications"  href="/bookings/applications/">My applications</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="user-container">
+            <h1>Profile Info</h1>
+            {% if user.is_authenticated %}
+                <div class="user">
+                    <div class="user-item">
+                        <div class="user-info">
+                            <h2>{{ user.email }}</h2>
+                            <p>Joined: {{ user.date_joined }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p>Пожалуйста, войдите в систему, чтобы просмотреть профиль.</p>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 RentHub — All rights are protected.</p>
+    </footer>
+</body>
+</html>
