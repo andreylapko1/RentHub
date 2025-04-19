@@ -45,7 +45,7 @@ class BookingCreateSerializer(serializers.ModelSerializer):
 
 
 
-    # def validate(self, data):  # закомментировано для наглядности автоматизации выставления статуса
+    # def validate(self, data):  # комент для completed и отзыва
     #     if data['start_date'] < timezone.now() or data['end_date'] < timezone.now():
     #         raise ValidationError("The start and end date should be in the future.")
     #     return data

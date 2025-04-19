@@ -14,5 +14,4 @@ urlpatterns = [
     path('my/history/', UserBookingHistoryView.as_view(), name='userlist'),
 ]
 
-# TODO Запретить просмотр всех бронирований (bookings list) для обычных пользователей
-# TODO Завершенные бронирования
+

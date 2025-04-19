@@ -7,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, \
  RetrieveDestroyAPIView
@@ -22,6 +23,7 @@ from rentapp.permissions import IsLandlordOrForbidden
 
 
 class BookingsListView(ListAPIView):
+    permission_classes = [IsAdminUser]
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ['start_date', 'end_date', 'status', 'landlord_email',]
     ordering_fields = ['created_at', 'updated_at',]
@@ -179,7 +181,7 @@ class ConfirmCanceledBookingsView(RetrieveUpdateAPIView):
 
 class UserBookingsListView(ListAPIView):
     serializer_class = BookingToUserSerializer
-    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filter_backends = (DjangoFilterBackend, OrderingFilter)
     filterset_fields = ['created_at', 'landlord_email', ]
     ordering_fields = ['created_at', 'title', 'is_confirmed']
 
@@ -190,7 +192,8 @@ class UserBookingsListView(ListAPIView):
 
     def get(self, request, *args, **kwargs):
         if request.path.startswith('/api/'):
-            serializer = BookingToUserSerializer(instance=self.get_queryset(), many=True)
+            queryset = self.filter_queryset(self.get_queryset())
+            serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             form = UserBookingForm(request.GET)
@@ -226,9 +229,7 @@ def confirm_booking(request, pk):
 class UserBookingHistoryView(ListAPIView):
     pagination_class = CustomPagination
     queryset = Booking.objects.all()
-    filter_backends = (DjangoFilterBackend, OrderingFilter)
-    filterset_fields = ['created_at', 'landlord_email', ]
-    ordering_fields = ['created_at', 'title', 'is_confirmed']
+
     serializer_class = BookingsListSerializer
 
     def get_queryset(self):
