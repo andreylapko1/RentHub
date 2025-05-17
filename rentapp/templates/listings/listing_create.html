@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Listing</title>
+    <link rel="stylesheet" href="{% static 'listings/css/listing_create.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">RentHub</a>
+        </div>
+        <nav>
+            <a href="/listings">Main</a>
+            <a href="/listings/create">Create Listing</a>
+            <a href="/about/">About Us</a>
+            <a href="/user/profile/">Profile</a>
+        </nav>
+    </header>
+
+    <section class="form-section">
+        <h1>Create a New Listing</h1>
+        <form action="{% url 'listing_create' %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit Listing</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 RentHub. All rights reserved.</p>
+    </footer>
+</body>
+</html>

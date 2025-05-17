@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ads - reservation of housing</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'bookings/css/bookings_list.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">RentHub</a>
+        </div>
+        <nav>
+            <a id="main" href="/">Main</a>
+            <a href="/listings/create">Create listing</a>
+            <a href="/bookings/create/">Create booking</a>
+            <a href="/user/profile/">Profile</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="search-bar">
+            <input type="text" placeholder="Search by name or location" class="search-input">
+            <button class="search-button">Search</button>
+        </section>
+
+        <section class="bookings-container">
+            <h1>Advertisement</h1>
+            {% if bookings %}
+                <div class="bookings">
+                    {% for booking in bookings %}
+                        <div class="booking-item">
+                            <div class="listing-info">
+                                <a href="{% url 'bookings_confirmation' booking.id %}">
+                                    <h2>{{ booking.title }}</h2>
+                                </a>
+                                <p>{{ booking.renter }}</p>
+                                <p><strong>Start date:</strong> {{ booking.start_date }}</p>
+                                <p><strong>End date:</strong> {{ booking.end_date }} </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="pagination">
+                    {% if bookings.has_previous %}
+                        <a href="?page=1">&laquo; First</a>
+                        <a href="?page={{ bookings.previous_page_number }}">Previous</a>
+                    {% endif %}
+                    <span class="current">
+                        Page {{ bookings.number }} of {{ bookings.paginator.num_pages }}
+                    </span>
+                    {% if bookings.has_next %}
+                        <a href="?page={{ bookings.next_page_number }}">Next</a>
+                        <a href="?page={{ bookings.paginator.num_pages }}">Last &raquo;</a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>There are no available ads.</p>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 RentHub — All rights are protected.</p>
+    </footer>
+</body>
+</html>

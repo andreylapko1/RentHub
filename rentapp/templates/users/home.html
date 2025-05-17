@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RentHub</title>
+    <link rel="stylesheet" href="{% static 'users/css/home.css' %}">
+</head>
+<body>
+    <div class="main_div">
+        <header class="header">
+            <h1>RentHub API</h1>
+            <p>API</p>
+        </header>
+
+        <section class="links">
+            <div class="box_link">
+                <h3><a href="/api/listings">Listings</a></h3>
+                <p>View all available listings</p>
+            </div>
+                   <div class="box_link">
+                <h3><a href="/api/bookings">Bookings</a></h3>
+                <p>View your bookings</p>
+            </div>
+
+                  <div class="box_link">
+                <h3><a href="/api/listings/review">Review</a></h3>
+                              <form method="GET" action="{% url 'reviews_by_listing' %}">
+
+    <label for="listing_id">Listing ID:</label>
+    <input type="number" name="listing_id" id="listing_id" required>
+
+    <button type="submit">Submit</button>
+</form>
+
+                <p>Search review by listing ID</p>
+            </div>
+
+
+
+             <div class="box_link">
+                <h3><a href="/api/listings/create">Create Listing</a></h3>
+                <p>Create a new listing</p>
+            </div>
+
+                   <div class="box_link">
+                <h3><a href="/api/bookings/create">Create Booking</a></h3>
+                <p>Create a new booking</p>
+            </div>
+
+            <div class="box_link">
+                <h3><a href="/logout">Logout</a></h3>
+                <p>Logout</p>
+            </div>
+
+
+
+        </section>
+
+        <footer>
+            <p>&copy; 2025 RentHub |</p>
+        </footer>
+    </div>
+</body>
+</html>

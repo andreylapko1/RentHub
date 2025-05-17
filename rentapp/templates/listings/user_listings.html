@@ -1,0 +1,49 @@
+{% load static %}
+<header>
+    <div class="logo">
+        <a href="/">RentHub</a>
+    </div>
+    <nav>
+        <a href="/listings">Main</a>
+        <a href="/bookings/my">My bookings</a>
+        <a href="/user/profile/">Profile</a>
+    </nav>
+</header>
+<h2 id="yourlistings">Your Listings</h2>
+<link rel="stylesheet" href="{% static 'listings/css/user_listings.css' %}">
+<table id="bookings-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>description</th>
+            <th>location</th>
+            <th>price</th>
+            <th>rooms</th>
+            <th>type</th>
+            <th>rate</th>
+            <th>is_active</th>
+            <th>created_at</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for listing in listings %}
+        <tr id="listing-{{ listing.id }}">
+            <td>{{ listing.id }}</td>
+            <td><a href="{{ listing.id }}/update">{{ listing.title }}</a></td>
+            <td>{{ listing.description }}</td>
+            <td>{{ listing.location }}</td>
+            <td>{{ listing.price }}</td>
+            <td>{{ listing.rooms }}</td>
+            <td>{{ listing.type }}</td>
+            <td>{{ listing.rate }}</td>
+            <td>{{ listing.is_active }}</td>
+            <td>{{ listing.created_at }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No bookings found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

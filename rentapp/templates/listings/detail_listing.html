@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ads - reservation of housing</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'listings/css/detail_listing.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="/">RentHub</a>
+        </div>
+        <nav>
+            <a id="main" href="/listings">Main</a>
+            <a href="/listings/create">Create listing</a>
+            <a href="/about/">About us</a>
+            <a href="/user/profile/">Profile</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="listings-container">
+            <h1>Advertisement</h1>
+            <div class="listings">
+                <div class="listing-item">
+                    <img src="{% if listing.image %}{{ listing.image.url }}{% else %}{% static 'listings/images/images.jpg' %}{% endif %}" alt="{{ listing.title }}" class="listing-image">
+                    <div class="listing-info">
+                        <h2>{{ listing.title }}</h2>
+                        <p>{{ listing.description }}</p>
+                        <p><strong>Location: </strong>{{ listing.location.name_ascii }}</p>
+                        <p><strong>Landlord: </strong>{{ listing.landlord }}</p>
+                        <p><strong>Price:</strong> {{ listing.price }} $</p>
+                        <p><strong>Rate:</strong> {{ listing.rate }} <span class="rating">★★★★★</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <section class="reviews-container">
+                <h2>Reviews:</h2>
+                {% if listing.reviews.all %}
+                    <div class="reviews-list">
+                        {% for review in listing.reviews.all %}
+                            <div class="review-item">
+                                <p><strong>{{ review.user }}</strong> rated this listing <strong>{{ review.rate }} stars</strong>.</p>
+                                <p><strong>Review:</strong> {% if review.review %}{{ review.review }}{% else %}No review yet{% endif %}</p>
+                                <p><strong>Reviewed on:</strong> {{ review.created_at|date:"d M Y, H:i" }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No reviews yet for this listing.</p>
+                {% endif %}
+
+
+                <a href="{% url 'leave_review' listing.id %}" class="leave-review-button">Оставить отзыв</a>
+            </section>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 RentHub — All rights are protected.</p>
+    </footer>
+</body>
+</html>
